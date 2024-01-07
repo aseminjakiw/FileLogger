@@ -12,6 +12,8 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FileLogger.Tests", "src\Fil
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Playground", "src\Playground\Playground.fsproj", "{94435DDA-8376-4F1C-BCD1-A54C7BB56230}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playground.Cs", "Playground.Cs\Playground.Cs.csproj", "{13E77659-7FA6-42AA-A8A7-57370CC3C04C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,5 +44,9 @@ Global
 		{94435DDA-8376-4F1C-BCD1-A54C7BB56230}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{94435DDA-8376-4F1C-BCD1-A54C7BB56230}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{94435DDA-8376-4F1C-BCD1-A54C7BB56230}.Release|Any CPU.Build.0 = Release|Any CPU
+		{13E77659-7FA6-42AA-A8A7-57370CC3C04C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{13E77659-7FA6-42AA-A8A7-57370CC3C04C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{13E77659-7FA6-42AA-A8A7-57370CC3C04C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{13E77659-7FA6-42AA-A8A7-57370CC3C04C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
