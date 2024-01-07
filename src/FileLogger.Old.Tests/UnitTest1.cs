@@ -1,4 +1,4 @@
-namespace FileLogger.Tests;
+namespace FileLogger.Old.Tests;
 
 public class Tests
 {

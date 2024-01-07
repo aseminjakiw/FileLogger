@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Configuration;
 
-namespace FileLogger;
+namespace FileLogger.Old;
 
 public static class FileLoggerExtensions
 {

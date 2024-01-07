@@ -12,6 +12,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\FileLogger\FileLogger.csproj" />
+      <ProjectReference Include="..\FileLogger.Old\FileLogger.Old.csproj" />
     </ItemGroup>
 </Project>

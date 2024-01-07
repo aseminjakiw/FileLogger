@@ -1,6 +1,6 @@
-using FileLogger;
+using FileLogger.Old;
 
-namespace Playground;
+namespace Playground.Old;
 
 public class Program
 {

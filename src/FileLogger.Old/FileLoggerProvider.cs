@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Hosting;
 
-namespace FileLogger;
+namespace FileLogger.Old;
 
 using System.Collections.Concurrent;
 using System.Runtime.Versioning;

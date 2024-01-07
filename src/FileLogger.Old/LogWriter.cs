@@ -1,7 +1,7 @@
 ﻿using System.Threading.Channels;
 using Microsoft.Extensions.Hosting;
 
-namespace FileLogger;
+namespace FileLogger.Old;
 
 public interface ILogWriter
 {

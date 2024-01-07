@@ -1,4 +1,4 @@
-namespace Playground;
+namespace Playground.Old;
 
 public class Worker : BackgroundService
 {

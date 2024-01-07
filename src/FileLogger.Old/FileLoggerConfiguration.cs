@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 
-namespace FileLogger;
+namespace FileLogger.Old;
 
 public class FileLoggerConfiguration
 {
