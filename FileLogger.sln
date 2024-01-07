@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileLogger", "src\FileLogge
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileLogger.Tests", "src\FileLogger.Tests\FileLogger.Tests.csproj", "{C3FF0F45-BB98-4E43-94F8-96726DA50CD0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playground", "src\Playground\Playground.csproj", "{592E3A66-B8E5-4D86-BEEE-963285238BC0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{C3FF0F45-BB98-4E43-94F8-96726DA50CD0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C3FF0F45-BB98-4E43-94F8-96726DA50CD0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C3FF0F45-BB98-4E43-94F8-96726DA50CD0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{592E3A66-B8E5-4D86-BEEE-963285238BC0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{592E3A66-B8E5-4D86-BEEE-963285238BC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{592E3A66-B8E5-4D86-BEEE-963285238BC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{592E3A66-B8E5-4D86-BEEE-963285238BC0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
