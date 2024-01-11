@@ -6,7 +6,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Compile Include="FileLoggerExtensions.fs" />
+        <Compile Include="FilePath.fs"/>
+        <Compile Include="FileLoggerExtensions.fs"/>
     </ItemGroup>
 
     <ItemGroup>
