@@ -12,8 +12,9 @@ public record LogFileInfo(string Path, StreamWriter FileStream);
 
 public class LogWriter : ILogWriter, IDisposable
 {
-    private readonly Func<FileLoggerConfiguration> _getCurrentConfig;
+    private readonly CancellationTokenSource _cts = new();
     private readonly IHostEnvironment _environment;
+    private readonly Func<FileLoggerConfiguration> _getCurrentConfig;
 
     private readonly Channel<string> _queue = Channel.CreateBounded<string>(
         new BoundedChannelOptions(6_000)
@@ -24,7 +25,6 @@ public class LogWriter : ILogWriter, IDisposable
         });
 
     private readonly Task _writeLoop;
-    private readonly CancellationTokenSource _cts = new();
 
     public LogWriter(Func<FileLoggerConfiguration> getCurrentConfig, IHostEnvironment environment)
     {
@@ -33,9 +33,21 @@ public class LogWriter : ILogWriter, IDisposable
         _writeLoop = Task.Run(() => WriteLoop(_cts.Token), _cts.Token);
     }
 
+    public void Dispose()
+    {
+        _cts.Cancel();
+        _writeLoop.GetAwaiter().GetResult();
+        _cts.Dispose();
+    }
+
+    public void EnqueueWrite(string logEntry)
+    {
+        _queue.Writer.TryWrite(logEntry);
+    }
+
     private async Task WriteLoop(CancellationToken token)
     {
-        LogFileInfo fileInfo = OpenLogFile(GetCurrentLogFilePath());
+        var fileInfo = OpenLogFile(GetCurrentLogFilePath());
         try
         {
             await foreach (var logEntry in _queue.Reader.ReadAllAsync(token))
@@ -51,7 +63,6 @@ public class LogWriter : ILogWriter, IDisposable
         }
         catch (Exception e)
         {
-            
         }
     }
 
@@ -82,10 +93,7 @@ public class LogWriter : ILogWriter, IDisposable
             .Skip(config.MaxFiles)
             .ToList();
 
-        foreach (var fileToDelete in filesToDelete)
-        {
-            File.Delete(fileToDelete);
-        }
+        foreach (var fileToDelete in filesToDelete) File.Delete(fileToDelete);
 
         // delete old files
         return fileInfo;
@@ -117,17 +125,5 @@ public class LogWriter : ILogWriter, IDisposable
     {
         var logFilePath = Path.Combine(_environment.ContentRootPath, _getCurrentConfig().Filename);
         return logFilePath;
-    }
-
-    public void EnqueueWrite(string logEntry)
-    {
-        _queue.Writer.TryWrite(logEntry);
-    }
-
-    public void Dispose()
-    {
-        _cts.Cancel();
-        _writeLoop.GetAwaiter().GetResult();
-        _cts.Dispose();
     }
 }

@@ -7,9 +7,15 @@ public sealed class FileLogger(
     Func<FileLoggerConfiguration> getCurrentConfig,
     ILogWriter logWriter) : ILogger
 {
-    public IDisposable? BeginScope<TState>(TState state) where TState : notnull => default!;
+    public IDisposable? BeginScope<TState>(TState state) where TState : notnull
+    {
+        return default!;
+    }
 
-    public bool IsEnabled(LogLevel logLevel) => logLevel >= getCurrentConfig().MinLevel;
+    public bool IsEnabled(LogLevel logLevel)
+    {
+        return logLevel >= getCurrentConfig().MinLevel;
+    }
 
     public void Log<TState>(
         LogLevel logLevel,
@@ -18,21 +24,15 @@ public sealed class FileLogger(
         Exception? exception,
         Func<TState, Exception?, string> formatter)
     {
-        if (!IsEnabled(logLevel))
-        {
-            return;
-        }
-        
+        if (!IsEnabled(logLevel)) return;
+
         var timeStamp = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}";
         var threadId = $"{Environment.CurrentManagedThreadId:##}";
         var level = $"{logLevel,-5}";
         var message = formatter(state, exception);
 
-        if (exception != null)
-        {
-            message = message + Environment.NewLine + exception;
-        }
-        
+        if (exception != null) message = message + Environment.NewLine + exception;
+
         var logEntry = $"{timeStamp} [{threadId}] [{level}] [{category}] {message}";
         logWriter.EnqueueWrite(logEntry);
     }

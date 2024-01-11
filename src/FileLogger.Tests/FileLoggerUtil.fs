@@ -18,7 +18,7 @@ type TestClass() =
 type OtherTestClass() =
     class
     end
-    
+
 
 /// Contains temp directory for test and disposes it
 type TestContext(configJson: string) =

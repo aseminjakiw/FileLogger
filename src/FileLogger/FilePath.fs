@@ -33,27 +33,19 @@ module FilePath =
     let deleteFile path = path |> value |> File.Delete
 
     let createDirectory path =
-        path
-        |> value
-        |> Directory.CreateDirectory
-        |> ignore
+        path |> value |> Directory.CreateDirectory |> ignore
 
     let relativeTo relativeTo filePath =
-        Path.GetRelativePath(relativeTo |> value, filePath |> value)
-        |> FilePath
+        Path.GetRelativePath(relativeTo |> value, filePath |> value) |> FilePath
 
     let deleteDirectory filePath = filePath |> value |> Directory.Delete
 
     let directoryExists filePath = filePath |> value |> Directory.Exists
 
-    let directorySeperator =
-        Path.DirectorySeparatorChar
+    let directorySeperator = Path.DirectorySeparatorChar
 
     let getDirectoryName filePath =
-        filePath
-        |> value
-        |> Path.GetDirectoryName
-        |> FilePath
+        filePath |> value |> Path.GetDirectoryName |> FilePath
 
     let openFile (fileMode: FileMode) filePath = File.Open(filePath |> value, fileMode)
 
@@ -63,6 +55,3 @@ module FilePath =
     let getCreationTime filePath =
         let dateTime = filePath |> value |> File.GetCreationTimeUtc
         DateTimeOffset(dateTime, TimeSpan.Zero)
-
-
-

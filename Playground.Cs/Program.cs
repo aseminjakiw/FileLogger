@@ -9,7 +9,7 @@ public class ExampleClass;
 
 public class Program
 {
-    static async Task<int> Main(string[] args)
+    private static async Task<int> Main(string[] args)
     {
         var builder = Host.CreateApplicationBuilder(args);
 
