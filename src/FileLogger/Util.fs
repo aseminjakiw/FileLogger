@@ -1,13 +1,23 @@
-﻿namespace FileLogger.FilePath
+﻿namespace FileLogger
 
 open System
 open System.IO
+open System.Text
+
+// ###################################################################
+// #   F# wrapper for System.Text.StringBuilder
+// ###################################################################
+module StringBuilder =
+    let create () = StringBuilder()
+    let createWithMinLength (length: int) = StringBuilder(length)
+    let append (str: string) (stringBuilder: StringBuilder) = stringBuilder.Append(str)
+    let appendFormat str (object: obj) (stringBuilder: StringBuilder) = stringBuilder.AppendFormat(str, object)
+    let getString (stringBuilder: StringBuilder) = stringBuilder.ToString()
 
 
 // ###################################################################
 // #   FilePath handling
 // ###################################################################
-
 type FilePath = FilePath of string
 
 module FilePath =
