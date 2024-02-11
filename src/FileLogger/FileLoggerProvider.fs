@@ -12,7 +12,7 @@ open Microsoft.Extensions.Options
 [<ProviderAlias("File")>]
 type FileLoggerProvider
     (options: IOptionsMonitor<FileLoggerConfigurationDto>, timeProvider: TimeProvider, environment: IHostEnvironment) =
-    let controller = LogController()
+    let controller = new LogController()
     let mapConfig = LoggerConfiguration.mapDto environment.ContentRootPath
     do options.CurrentValue |> mapConfig |> controller.UpdateConfig
 

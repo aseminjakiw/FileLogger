@@ -52,7 +52,7 @@ module LoggerConfiguration =
             |> Seq.toList
 
         if configs.Length = 0 then
-            [ { FileName = resolvePath baseDir "logs.log"
+            [ { FileName = resolvePath baseDir "logs/logs.log"
                 MaxSize = defaultLogSize
                 MaxFiles = defaultLogFiles
                 Buffered = false } ]
