@@ -27,8 +27,7 @@ module LoggerConfiguration =
     let defaultLogSize = 10 * 1024 * 1024
     let defaultLogFiles = 10
 
-    let getValues (dict: Dictionary<_, _>) =
-        dict |> Seq.map (_.Value)
+    let getValues (dict: Dictionary<_, _>) = dict |> Seq.map (_.Value)
 
     let resolvePath baseDir path =
         let path = path |> Option.ofObj |> Option.defaultValue String.Empty

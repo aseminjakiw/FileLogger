@@ -3,7 +3,6 @@
 open System
 open System.IO
 open System.Text
-open FileLogger.FilePath
 open FileLogger.Tests.Util
 open Microsoft.Extensions.Hosting
 open Microsoft.Extensions.Logging
@@ -27,15 +26,13 @@ type OtherTestClass() =
 type TestContext(configJson: string, testDir: TestDirectory) =
     let builder = Host.CreateApplicationBuilder()
     do builder.Environment.ContentRootPath <- testDir.Path |> FilePath.value
-    let jsonStream =
-        Encoding.UTF8.GetBytes(configJson)
-        |> MemoryStream
-    
+    let jsonStream = Encoding.UTF8.GetBytes(configJson) |> MemoryStream
+
     let _ = builder.Configuration.AddJsonStream(jsonStream)
 
     let _ = builder.Logging.ClearProviders()
     let _ = builder.Logging.SetMinimumLevel(LogLevel.Trace)
-    
+
     let _ = builder.Logging.AddFile()
     let timeProvider = FakeTimeProvider()
     let _ = builder.Services.AddSingleton<TimeProvider>(timeProvider)

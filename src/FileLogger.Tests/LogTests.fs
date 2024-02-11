@@ -2,8 +2,6 @@
 
 open System.IO
 open System.Text.RegularExpressions
-open System.Threading
-open System.Threading.Tasks
 open Microsoft.Extensions.Logging
 open Xunit
 open FsUnit
@@ -26,16 +24,13 @@ let config =
     """
 
 let normalizeThreadId (lines: string array) =
-    lines
-    |> Array.map (fun line -> Regex.Replace(line, @"\[..\]", "[00]"))
+    lines |> Array.map (fun line -> Regex.Replace(line, @"\[..\]", "[00]"))
 
 let getLogs path =
-    path
-    |> File.ReadAllLines
-    |> normalizeThreadId   
+    path |> File.ReadAllLines |> normalizeThreadId
 
 
-let flushLogs (test:TestContext) = test.Host.Dispose()
+let flushLogs (test: TestContext) = test.Host.Dispose()
 
 
 [<Fact>]
@@ -44,11 +39,14 @@ let ``Write log message`` () : unit =
     test.SetTime "2022-05-06 21:43:23.456"
 
     test.Logger.LogInformation "test log"
-    
+
     do flushLogs test
+
     $"{test.Directory}\logFile.log"
     |> getLogs
-    |> should be (equivalent [ "2022-05-06 21:43:23.456 [00] [INFO ] [FileLogger.Tests.FileLoggerUtil.TestClass] test log" ])
+    |> should
+        be
+        (equivalent [ "2022-05-06 21:43:23.456 [00] [INFO ] [FileLogger.Tests.FileLoggerUtil.TestClass] test log" ])
 
 
 [<Fact>]
@@ -61,6 +59,7 @@ let ``Write different log messages`` () : unit =
     test.Logger.LogInformation "test log3"
 
     do flushLogs test
+
     $"{test.Directory}\logFile.log"
     |> getLogs
     |> should
@@ -84,6 +83,7 @@ let ``Write different times`` () : unit =
     test.Logger.LogInformation "test log3"
 
     do flushLogs test
+
     $"{test.Directory}\logFile.log"
     |> getLogs
     |> should
@@ -95,9 +95,7 @@ let ``Write different times`` () : unit =
 
 [<Fact>]
 let ``Write log level`` () : unit =
-    use test =
-        config
-        |> setup
+    use test = config |> setup
     test.SetTime "2022-05-06 21:43:23.456"
 
     test.Logger.LogTrace "test log"
@@ -106,8 +104,9 @@ let ``Write log level`` () : unit =
     test.Logger.LogWarning "test log"
     test.Logger.LogError "test log"
     test.Logger.LogCritical "test log"
-    
+
     do flushLogs test
+
     $"{test.Directory}\logFile.log"
     |> getLogs
     |> should
@@ -129,6 +128,7 @@ let ``Write different categories`` () : unit =
     test.OtherLogger.LogInformation "test log"
 
     do flushLogs test
+
     $"{test.Directory}\logFile.log"
     |> getLogs
     |> should
@@ -155,20 +155,26 @@ let ``File roll over -> move content to archive file and still write in new file
         }
         """
         |> setup
+
     test.SetTime "2022-05-06 21:43:23.456"
-    
+
     test.Logger.LogInformation "test log1"
     test.Logger.LogInformation "test log2"
 
     do flushLogs test
+
     $"{test.Directory}\logFile.log"
     |> getLogs
-    |> should be (equivalent [ "2022-05-06 21:43:23.456 [00] [INFO ] [FileLogger.Tests.FileLoggerUtil.TestClass] test log2" ])
+    |> should
+        be
+        (equivalent [ "2022-05-06 21:43:23.456 [00] [INFO ] [FileLogger.Tests.FileLoggerUtil.TestClass] test log2" ])
 
 
     $"{test.Directory}\logFile.1.log"
     |> getLogs
-    |> should be (equivalent [ "2022-05-06 21:43:23.456 [00] [INFO ] [FileLogger.Tests.FileLoggerUtil.TestClass] test log1" ])
+    |> should
+        be
+        (equivalent [ "2022-05-06 21:43:23.456 [00] [INFO ] [FileLogger.Tests.FileLoggerUtil.TestClass] test log1" ])
 
 
 [<Fact>]
@@ -191,16 +197,22 @@ let ``multiple loggers -> write in both files`` () : unit =
         }
         """
         |> setup
+
     test.SetTime "2022-05-06 21:43:23.456"
 
     test.Logger.LogInformation "test log"
 
     do flushLogs test
+
     $"{test.Directory}\logFile.log"
     |> getLogs
-    |> should be (equivalent [ "2022-05-06 21:43:23.456 [00] [INFO ] [FileLogger.Tests.FileLoggerUtil.TestClass] test log" ])
+    |> should
+        be
+        (equivalent [ "2022-05-06 21:43:23.456 [00] [INFO ] [FileLogger.Tests.FileLoggerUtil.TestClass] test log" ])
 
 
     $"{test.Directory}\other.log"
     |> getLogs
-    |> should be (equivalent [ "2022-05-06 21:43:23.456 [00] [INFO ] [FileLogger.Tests.FileLoggerUtil.TestClass] test log" ])
+    |> should
+        be
+        (equivalent [ "2022-05-06 21:43:23.456 [00] [INFO ] [FileLogger.Tests.FileLoggerUtil.TestClass] test log" ])

@@ -21,16 +21,15 @@ type LogWorker() =
     let dispose (writer: StreamWriter) =
         writer.Flush()
         writer.Dispose()
-        
+
     let tryDispose writer =
         match writer with
-        | Some (writer:Writer) ->
-            dispose writer.Writer
+        | Some(writer: Writer) -> dispose writer.Writer
         | None -> ()
-        
+
     let getArchiveFiles config =
         let logName = Path.GetFileNameWithoutExtension config.FileName
-        let logExtension = Path.GetExtension config.FileName        
+        let logExtension = Path.GetExtension config.FileName
         let archiveSearchPattern = logName + ".*" + logExtension
         let logDir = Path.GetDirectoryName config.FileName
         Directory.EnumerateFiles(logDir, archiveSearchPattern)
@@ -61,55 +60,65 @@ type LogWorker() =
         Path.Combine(logDir, $"{logName}.{maxArchiveNumber + 1}{logExtension}")
 
     let openLogFile config =
-        config.FileName
-        |> Path.GetDirectoryName
-        |> Directory.CreateDirectory
-        |> ignore
-        
+        config.FileName |> Path.GetDirectoryName |> Directory.CreateDirectory |> ignore
+
         let stream =
             File.Open(config.FileName, FileMode.Append, FileAccess.Write, FileShare.ReadWrite ||| FileShare.Delete)
 
         let writer = new StreamWriter(stream, leaveOpen = false)
         writer.AutoFlush <- not (config.Buffered)
         writer
-        
+
     let deleteOldFiles config =
         getArchiveFiles config
-        |> Seq.map (fun x ->(x, File.GetLastWriteTimeUtc x))
+        |> Seq.map (fun x -> (x, File.GetLastWriteTimeUtc x))
         |> Seq.sortByDescending snd
         |> Seq.map fst
         |> Seq.mapi (fun i file -> (i, file))
         |> Seq.skipWhile (fun (i, file) -> i < config.MaxFiles - 1)
         |> Seq.map snd
         |> Seq.iter File.Delete
-    
+
     let archiveCurrentLog config =
         let archiveName = getNextArchiveName config
         File.Move(config.FileName, archiveName)
         deleteOldFiles config
-        
-        
-        
+
+
+
 
     let handle state message =
         match message with
-        | UpdateConfig config -> Some { state with LogWorkerState.Config = Some config }
+        | UpdateConfig config ->
+            Some
+                { state with
+                    LogWorkerState.Config = Some config }
         | WriteLog log ->
-            try 
+            try
                 match state.Writer, state.Config with
                 | _, None -> state
                 | None, Some config ->
                     let streamWriter = openLogFile config
                     do streamWriter.WriteLine(log)
-                    { state with LogWorkerState.Writer = Some { Writer = streamWriter; Config = config } }
+
+                    { state with
+                        LogWorkerState.Writer =
+                            Some
+                                { Writer = streamWriter
+                                  Config = config } }
                 | Some writer, Some config ->
                     if writer.Config = config then
                         if writer.Writer.BaseStream.Position >= config.MaxSize then
-                            do dispose writer.Writer    
+                            do dispose writer.Writer
                             do archiveCurrentLog config
                             let streamWriter = openLogFile config
                             do streamWriter.WriteLine(log)
-                            { state with LogWorkerState.Writer = Some { Writer = streamWriter; Config = config } }
+
+                            { state with
+                                LogWorkerState.Writer =
+                                    Some
+                                        { Writer = streamWriter
+                                          Config = config } }
                         else
                             do writer.Writer.WriteLine(log)
                             state
@@ -117,43 +126,21 @@ type LogWorker() =
                         do dispose writer.Writer
                         let streamWriter = openLogFile config
                         do streamWriter.WriteLine(log)
-                        { LogWorkerState.Writer = Some { Writer = streamWriter; Config = config }; Config = Some config }
-                |> Some
-            with
-            | e -> Some state // ignore exception since we have no way of handling it
-                
-            
-            
-            
 
-            // let state =
-            //     match state.Config with
-            //     | Some config ->
-            //         if log.Length > (config.MaxSize - (int) state.Writer.BaseStream.Position) then
-            //             dispose state.Writer
-            //             let archiveName = getNextArchiveName config
-            //             File.Move(config.FileName, archiveName)
-            //             let writer = openLogFile config
-            //
-            //
-            //             { Writer = writer
-            //               Config = Some config }
-            //         else
-            //             state
-            //     | None -> state
-            //
-            // state.Writer.WriteLine(log)
-            // Some state
+                        { LogWorkerState.Writer =
+                            Some
+                                { Writer = streamWriter
+                                  Config = config }
+                          Config = Some config }
+                |> Some
+            with e ->
+                Some state // ignore exception since we have no way of handling it
         | Close reply ->
             tryDispose state.Writer
             reply.Reply()
             None
 
-    let agent =
-        Agent.newStoppableAgent
-            handle
-            { Writer = None
-              Config = None }
+    let agent = Agent.newStoppableAgent handle { Writer = None; Config = None }
 
     let mutable isDisposed = false
 

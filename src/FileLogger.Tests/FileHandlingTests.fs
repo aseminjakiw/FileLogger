@@ -142,11 +142,11 @@ let ``absolute path in file name -> use absolute path`` () : unit =
         """
 
     use test = new TestContext(config, testDir)
-
     test.Logger.LogInformation "test log"
-
     do flushLogs test
-    test.FileNames |> should be (equal [ $"{testDir.Path |> FilePath.value }\logFile.log" ])
+
+    test.FileNames
+    |> should be (equal [ $"{testDir.Path |> FilePath.value}\logFile.log" ])
 
 [<Fact>]
 let ``log bigger than max size -> move old file and start new with configured file name`` () : unit =
