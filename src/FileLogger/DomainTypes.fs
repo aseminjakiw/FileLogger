@@ -28,4 +28,4 @@ module LogEntry =
             | None -> String.Empty
             | Some exn -> Environment.NewLine + exn.ToString()
 
-        $"{log.Time:``yyyy-MM-dd HH:mm:ss.fff``} [{log.ThreadId:``##``}] [{log.Level |> levelToString}] [{log.Category}] {log.Message}{exceptionStr}"
+        $"{log.Time:``yyyy-MM-dd HH:mm:ss.fff``} [{log.ThreadId:``00``}] [{log.Level |> levelToString}] [{log.Category}] {log.Message}{exceptionStr}"

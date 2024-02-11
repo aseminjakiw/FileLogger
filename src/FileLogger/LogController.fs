@@ -47,8 +47,8 @@ type LogController() =
     let mutable isDisposed = false
 
     member this.WriteLog log =
-        ObjectDisposedException.ThrowIf(isDisposed, this)
-        log |> WriteLog |> agent.Post
+        if not isDisposed then
+            log |> WriteLog |> agent.Post
 
     member this.UpdateConfig config =
         ObjectDisposedException.ThrowIf(isDisposed, this)

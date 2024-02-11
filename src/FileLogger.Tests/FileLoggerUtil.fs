@@ -35,6 +35,8 @@ type TestContext(configJson: string) =
     let _ = builder.Configuration.AddJsonStream(jsonStream)
 
     let _ = builder.Logging.ClearProviders()
+    let _ = builder.Logging.SetMinimumLevel(LogLevel.Trace)
+    
     let _ = builder.Logging.AddFile()
     let timeProvider = FakeTimeProvider()
     let _ = builder.Services.AddSingleton<TimeProvider>(timeProvider)
