@@ -78,7 +78,6 @@ module Agent =
                 async {
                     let! message = inbox.Receive()
                     let newState = handler oldState message
-
                     match newState with
                     | Some state -> return! loop state
                     | None -> return ()

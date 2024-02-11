@@ -152,6 +152,7 @@ let ``File roll over -> move content to archive file and still write in new file
         }
         """
         |> setup
+    test.SetTime "2022-05-06 21:43:23.456"
     
     test.Logger.LogInformation "test log1"
     test.Logger.LogInformation "test log2"
@@ -159,12 +160,12 @@ let ``File roll over -> move content to archive file and still write in new file
     do flushLogs test
     $"{test.Directory}\logFile.log"
     |> getLogs
-    |> should be (equivalent [ "2022-05-06 21:43:23.456 [00] [INFO ] [FileLogger.Tests.FileLoggerUtil.TestClass] test log" ])
+    |> should be (equivalent [ "2022-05-06 21:43:23.456 [00] [INFO ] [FileLogger.Tests.FileLoggerUtil.TestClass] test log2" ])
 
 
     $"{test.Directory}\logFile.1.log"
     |> getLogs
-    |> should be (equivalent [ "2022-05-06 21:43:23.456 [00] [INFO ] [FileLogger.Tests.FileLoggerUtil.TestClass] test log2" ])
+    |> should be (equivalent [ "2022-05-06 21:43:23.456 [00] [INFO ] [FileLogger.Tests.FileLoggerUtil.TestClass] test log1" ])
 
 
 [<Fact>]
@@ -176,13 +177,14 @@ let ``multiple loggers -> write in both files`` () : unit =
             "File": {
               "Files": {
                 "logFile.log": {},
-                "other.txt": {}
+                "other.log": {}
               }
             }
           }
         }
         """
         |> setup
+    test.SetTime "2022-05-06 21:43:23.456"
 
     test.Logger.LogInformation "test log"
 

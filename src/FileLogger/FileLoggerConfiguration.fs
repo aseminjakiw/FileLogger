@@ -38,14 +38,23 @@ module LoggerConfiguration =
             Path.Combine(baseDir, path)
 
     let mapDto baseDir (dto: FileLoggerConfigurationDto) =
-        dto.Files
-        |> Option.ofObj
-        |> Option.defaultValue (Dictionary())
-        |> toMap
-        |> Map.map (fun logger config ->
-            { FileName = resolvePath baseDir logger
-              MaxSize = config.MaxSize |> Option.ofNullable |> Option.defaultValue defaultLogSize
-              MaxFiles = config.MaxFiles |> Option.ofNullable |> Option.defaultValue defaultLogFiles
-              Buffered = config.Buffered |> Option.ofNullable |> Option.defaultValue false })
-        |> Map.values
-        |> Seq.toList
+        let configs =
+            dto.Files
+            |> Option.ofObj
+            |> Option.defaultValue (Dictionary())
+            |> toMap
+            |> Map.map (fun logger config ->
+                { FileName = resolvePath baseDir logger
+                  MaxSize = config.MaxSize |> Option.ofNullable |> Option.defaultValue defaultLogSize
+                  MaxFiles = config.MaxFiles |> Option.ofNullable |> Option.defaultValue defaultLogFiles
+                  Buffered = config.Buffered |> Option.ofNullable |> Option.defaultValue false })
+            |> Map.values
+            |> Seq.toList
+
+        if configs.Length = 0 then
+            [ { FileName = resolvePath baseDir "logs.log"
+                MaxSize = defaultLogSize
+                MaxFiles = defaultLogFiles
+                Buffered = false } ]
+        else
+            configs

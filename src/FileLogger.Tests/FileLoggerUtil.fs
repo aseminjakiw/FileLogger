@@ -24,8 +24,7 @@ type OtherTestClass() =
 
 
 /// Contains temp directory for test and disposes it
-type TestContext(configJson: string) =
-    let testDir = new TestDirectory()
+type TestContext(configJson: string, testDir: TestDirectory) =
     let builder = Host.CreateApplicationBuilder()
     do builder.Environment.ContentRootPath <- testDir.Path |> FilePath.value
     let jsonStream =
@@ -41,6 +40,7 @@ type TestContext(configJson: string) =
     let timeProvider = FakeTimeProvider()
     let _ = builder.Services.AddSingleton<TimeProvider>(timeProvider)
     let host = builder.Build()
+    new(configJson) = new TestContext(configJson, new TestDirectory())
 
     member this.Logger = host.Services.GetRequiredService<ILogger<TestClass>>()
     member this.OtherLogger = host.Services.GetRequiredService<ILogger<OtherTestClass>>()
