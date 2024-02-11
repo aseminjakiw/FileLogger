@@ -23,7 +23,7 @@ type FileLoggerExtensions =
 
         builder
 
-    static member AddFile(builder: ILoggingBuilder, configure) =
+    static member AddFile(builder: ILoggingBuilder, configure: Action<FileLoggerConfigurationDto>) =
         do builder.AddFile() |> ignore
         do builder.Services.Configure configure |> ignore
         builder
