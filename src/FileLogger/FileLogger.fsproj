@@ -6,11 +6,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Compile Include="Util.fs" />
-        <Compile Include="DomainTypes.fs" />
-        <Compile Include="FileLoggerConfiguration.fs" />
-        <Compile Include="FileLogger.fs" />
-        <Compile Include="FileLoggerProvider.fs" />
+        <Compile Include="Util.fs"/>
+        <Compile Include="DomainTypes.fs"/>
+        <Compile Include="FileLoggerConfiguration.fs"/>
+        <Compile Include="LogWorker.fs"/>
+        <Compile Include="LogController.fs"/>
+        <Compile Include="FileLogger.fs"/>
+        <Compile Include="FileLoggerProvider.fs"/>
         <Compile Include="FileLoggerExtensions.fs"/>
     </ItemGroup>
 

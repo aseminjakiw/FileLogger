@@ -1,6 +1,5 @@
 ﻿namespace FileLogger
 
-open System
 open System.Runtime.CompilerServices
 open Microsoft.Extensions.DependencyInjection
 open Microsoft.Extensions.DependencyInjection.Extensions
@@ -14,7 +13,12 @@ type FileLoggerExtensions =
     static member AddFile(builder: ILoggingBuilder) =
         do builder.AddConfiguration()
         do builder.Services.TryAddEnumerable(ServiceDescriptor.Singleton<ILoggerProvider, FileLoggerProvider>())
-        do LoggerProviderOptions.RegisterProviderOptions<FileLoggerConfigurationDto, FileLoggerProvider>(builder.Services)
+
+        do
+            LoggerProviderOptions.RegisterProviderOptions<FileLoggerConfigurationDto, FileLoggerProvider>(
+                builder.Services
+            )
+
         builder
 
     static member AddFile(builder: ILoggingBuilder, configure) =

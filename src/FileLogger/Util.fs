@@ -65,3 +65,25 @@ module FilePath =
     let getCreationTime filePath =
         let dateTime = filePath |> value |> File.GetCreationTimeUtc
         DateTimeOffset(dateTime, TimeSpan.Zero)
+
+
+// ###################################################################
+// #   Agent Utils
+// ###################################################################
+/// Utility functions for working with MailboxProcessor / Agents
+module Agent =
+    let newStoppableAgent handler initialState =
+        let mailBoxWorker (inbox: MailboxProcessor<_>) =
+            let rec loop oldState =
+                async {
+                    let! message = inbox.Receive()
+                    let newState = handler oldState message
+
+                    match newState with
+                    | Some state -> return! loop state
+                    | None -> return ()
+                }
+
+            loop initialState
+
+        MailboxProcessor.Start(mailBoxWorker)

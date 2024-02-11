@@ -1,27 +1,21 @@
-﻿module FileLogger.FileLogger
+﻿namespace FileLogger
 
-open System.IO
+open System
+open System.Runtime.CompilerServices
+open Microsoft.Extensions.Logging
 
+type FileLogger(category: string, timeProvider: TimeProvider, writeLog) =
+    interface ILogger with
+        member this.BeginScope(state) = Unsafe.NullRef<IDisposable>()
+        member this.IsEnabled(logLevel) = true //TODO: respect logLevel
 
-let writeToStream (stream : StreamWriter) log =
-    let logLine = log |> LogEntry.toString
-    stream.WriteLine logLine
-    stream.Flush ()
-    
+        member this.Log(logLevel, eventId, state, except, formatter) =
+            let logEntry =
+                { Time = timeProvider.GetLocalNow()
+                  ThreadId = Environment.CurrentManagedThreadId
+                  Level = logLevel
+                  Category = category
+                  Message = formatter.Invoke(state, except)
+                  Exception = Option.ofObj except }
 
-
-let isOn (config: LoggerConfiguration) (log: LogEntry) = true
-
-let logEntry (config: LoggerConfiguration) (log: LogEntry) = ()
-
-let write (getCurrentConfig: unit -> LoggerConfiguration list) (log: LogEntry) =
-    let configs = getCurrentConfig ()
-    
-    //TODO: write to file
-    //TODO: respect config changes
-    //TODO: to file rollover
-    //TODO: write multiple files
-
-    for config in configs do
-        if isOn config log then
-            logEntry config log
+            writeLog logEntry
