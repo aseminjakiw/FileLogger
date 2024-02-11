@@ -16,7 +16,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\FileLogger\FileLogger.fsproj"/>
+        <ProjectReference Include="..\asemin.FileLogger\asemin.FileLogger.fsproj" />
     </ItemGroup>
 
     <ItemGroup>

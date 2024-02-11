@@ -4,7 +4,7 @@ open System
 open System.IO
 open Xunit
 
-open FileLogger
+open asemin.FileLogger
 
 
 // ###################################################################

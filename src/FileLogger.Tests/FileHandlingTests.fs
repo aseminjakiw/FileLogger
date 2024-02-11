@@ -1,6 +1,6 @@
 ﻿module FileLogger.Tests.FileHandlingTests
 
-open FileLogger
+open asemin.FileLogger
 open FileLogger.Tests.Util
 open Microsoft.Extensions.Logging
 open Xunit

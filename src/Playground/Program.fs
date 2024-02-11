@@ -1,11 +1,10 @@
-﻿open System.Collections.Generic
-open System.Diagnostics
-open System.Threading.Tasks
+﻿open System.Diagnostics
 open Microsoft.Extensions.Hosting
 open Microsoft.Extensions.Logging
 open Microsoft.Extensions.DependencyInjection
 
-open FileLogger
+open asemin.FileLogger
+
 
 type ExampleClass() =
     class

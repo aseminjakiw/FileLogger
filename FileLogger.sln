@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FileLogger", "src\FileLogger\FileLogger.fsproj", "{ABDE4B13-E8FF-4D44-BEFC-DC761D8D443D}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "asemin.FileLogger", "src\asemin.FileLogger\asemin.FileLogger.fsproj", "{ABDE4B13-E8FF-4D44-BEFC-DC761D8D443D}"
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FileLogger.Tests", "src\FileLogger.Tests\FileLogger.Tests.fsproj", "{A02D3C3D-E3A0-4B4B-B65E-6B7AC5992CA7}"
 EndProject

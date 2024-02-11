@@ -3,6 +3,7 @@
 open System
 open System.IO
 open System.Text
+open asemin.FileLogger
 open FileLogger.Tests.Util
 open Microsoft.Extensions.Hosting
 open Microsoft.Extensions.Logging

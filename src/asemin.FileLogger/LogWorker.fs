@@ -1,4 +1,4 @@
-﻿namespace FileLogger
+﻿namespace asemin.FileLogger
 
 open System
 open System.IO
