@@ -52,7 +52,7 @@ module FilePath =
 
     let directoryExists filePath = filePath |> value |> Directory.Exists
 
-    let directorySeperator = Path.DirectorySeparatorChar
+    let directorySeparator = Path.DirectorySeparatorChar
 
     let getDirectoryName filePath =
         filePath |> value |> Path.GetDirectoryName |> FilePath
