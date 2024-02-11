@@ -16,7 +16,9 @@ let config =
       "Logging": {
         "File": {
           "Files": {
-            "logFile.log": {}
+            "default": {
+              "File": "logFile.log"
+            }
           }
         }
       }
@@ -143,7 +145,8 @@ let ``File roll over -> move content to archive file and still write in new file
           "Logging": {
             "File": {
               "Files": {
-                "logFile.log": {
+                "default": {
+                  "File": "logFile.log",                  
                   "MaxSize": 5
                 }
               }
@@ -176,8 +179,12 @@ let ``multiple loggers -> write in both files`` () : unit =
           "Logging": {
             "File": {
               "Files": {
-                "logFile.log": {},
-                "other.log": {}
+                "default": {
+                  "File": "logFile.log"
+                },
+                "other": {
+                  "File": "other.log"
+                }
               }
             }
           }

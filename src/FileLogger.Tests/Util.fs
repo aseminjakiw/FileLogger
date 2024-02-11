@@ -24,7 +24,8 @@ type TestDirectory() =
 
     interface IDisposable with
         member this.Dispose() =
-            Directory.Delete(tempDirectory |> FilePath.value, true)
+            if FilePath.directoryExists tempDirectory then
+                Directory.Delete(tempDirectory |> FilePath.value, true)
 
     member this.Path = tempDirectory
     member this.Dispose() = (this :> IDisposable).Dispose()

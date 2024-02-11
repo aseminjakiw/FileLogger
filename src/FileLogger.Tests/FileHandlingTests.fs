@@ -31,7 +31,9 @@ let ``File name in config -> use file name`` () : unit =
           "Logging": {
             "File": {
               "Files": {
-                "logFile.log": {}
+                "default": {
+                  "File": "logFile.log"
+                }
               }
             }
           }
@@ -52,8 +54,12 @@ let ``multiple file loggers -> write in both`` () : unit =
           "Logging": {
             "File": {
               "Files": {
-                "logFile.log": {},
-                "otherLogFile.log": {},
+                "default": {
+                  "File": "logFile.log"
+                },
+                "other": {
+                  "File": "otherLogFile.log"
+                }
               }
             }
           }
@@ -76,7 +82,9 @@ let ``relative path (backward slash) in file name -> append path to current dir`
           "Logging": {
             "File": {
               "Files": {
-                "logs\\logFile.log": {}
+                "default": {
+                  "File": "logs\\logFile.log"
+                }
               }
             }
           }
@@ -97,7 +105,9 @@ let ``relative path (forward slash) in file name -> append path to current dir``
           "Logging": {
             "File": {
               "Files": {
-                "logs/logFile.log": {}
+                "default": {
+                  "File": "logs/logFile.log"
+                }
               }
             }
           }
@@ -114,8 +124,7 @@ let ``relative path (forward slash) in file name -> append path to current dir``
 let ``absolute path in file name -> use absolute path`` () : unit =
     use testDir = new TestDirectory()
     let toForwardSlashes (str: string) = str.Replace('\\', '/')
-    let escapeColon (str: string) = str.Replace(":", "__")
-    let dir = testDir.Path |> FilePath.value |> toForwardSlashes |> escapeColon
+    let jsonCompatibleDir = testDir.Path |> FilePath.value |> toForwardSlashes
 
     let config =
         $$"""
@@ -123,7 +132,9 @@ let ``absolute path in file name -> use absolute path`` () : unit =
           "Logging": {
             "File": {
               "Files": {
-                "{{dir}}/logFile.log": {}
+                "default": {
+                  "File": "{{jsonCompatibleDir}}/logFile.log"
+                }
               }
             }
           }
@@ -135,7 +146,7 @@ let ``absolute path in file name -> use absolute path`` () : unit =
     test.Logger.LogInformation "test log"
 
     do flushLogs test
-    test.FileNames |> should be (equal [ "D:\Temp\logs\logFile.log" ])
+    test.FileNames |> should be (equal [ $"{testDir.Path |> FilePath.value }\logFile.log" ])
 
 [<Fact>]
 let ``log bigger than max size -> move old file and start new with configured file name`` () : unit =
@@ -145,7 +156,8 @@ let ``log bigger than max size -> move old file and start new with configured fi
           "Logging": {
             "File": {
               "Files": {
-                "logFile.log": {
+                "default": {
+                  "File": "logFile.log",
                   "MaxSize": 5
                 }
               }
@@ -172,7 +184,8 @@ let ``more log files than max files -> delete older ones`` () : unit =
           "Logging": {
             "File": {
               "Files": {
-                "logFile.log": {
+                "default": {
+                  "File": "logFile.log",
                   "MaxSize": 5,
                   "MaxFiles": 3
                 }
@@ -205,7 +218,8 @@ let ``log bigger than max size -> append correct number to archived file`` () : 
           "Logging": {
             "File": {
               "Files": {
-                "logFile.log": {
+                "default": {
+                  "File": "logFile.log",
                   "MaxSize": 5,
                   "MaxFiles": 200
                 }

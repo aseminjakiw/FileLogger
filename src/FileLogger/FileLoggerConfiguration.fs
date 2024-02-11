@@ -6,7 +6,8 @@ open System.IO
 
 [<CLIMutable>]
 type LoggerConfigurationDto =
-    { MaxSize: Nullable<int>
+    { File: String
+      MaxSize: Nullable<int>
       MaxFiles: Nullable<int>
       Buffered: Nullable<bool> }
 
@@ -26,10 +27,11 @@ module LoggerConfiguration =
     let defaultLogSize = 10 * 1024 * 1024
     let defaultLogFiles = 10
 
-    let toMap (dict: Dictionary<_, _>) =
-        dict |> Seq.map (fun x -> (x.Key, x.Value)) |> Map
+    let getValues (dict: Dictionary<_, _>) =
+        dict |> Seq.map (_.Value)
 
     let resolvePath baseDir path =
+        let path = path |> Option.ofObj |> Option.defaultValue String.Empty
         let path = Environment.ExpandEnvironmentVariables path
 
         if Path.IsPathRooted path then
@@ -42,13 +44,12 @@ module LoggerConfiguration =
             dto.Files
             |> Option.ofObj
             |> Option.defaultValue (Dictionary())
-            |> toMap
-            |> Map.map (fun logger config ->
-                { FileName = resolvePath baseDir logger
-                  MaxSize = config.MaxSize |> Option.ofNullable |> Option.defaultValue defaultLogSize
-                  MaxFiles = config.MaxFiles |> Option.ofNullable |> Option.defaultValue defaultLogFiles
-                  Buffered = config.Buffered |> Option.ofNullable |> Option.defaultValue false })
-            |> Map.values
+            |> getValues
+            |> Seq.map (fun dto ->
+                { FileName = resolvePath baseDir dto.File
+                  MaxSize = dto.MaxSize |> Option.ofNullable |> Option.defaultValue defaultLogSize
+                  MaxFiles = dto.MaxFiles |> Option.ofNullable |> Option.defaultValue defaultLogFiles
+                  Buffered = dto.Buffered |> Option.ofNullable |> Option.defaultValue false })
             |> Seq.toList
 
         if configs.Length = 0 then
