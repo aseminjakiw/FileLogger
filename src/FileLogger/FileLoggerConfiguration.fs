@@ -20,8 +20,7 @@ type FileLoggerConfigurationDto =
 type LoggerConfiguration =
     { FileName: string
       MaxSize: int
-      MaxFiles: int
-      Buffered: bool }
+      MaxFiles: int}
 
 module LoggerConfiguration =
     let defaultLogSize = 10 * 1024 * 1024
@@ -47,14 +46,12 @@ module LoggerConfiguration =
             |> Seq.map (fun dto ->
                 { FileName = resolvePath baseDir dto.File
                   MaxSize = dto.MaxSize |> Option.ofNullable |> Option.defaultValue defaultLogSize
-                  MaxFiles = dto.MaxFiles |> Option.ofNullable |> Option.defaultValue defaultLogFiles
-                  Buffered = dto.Buffered |> Option.ofNullable |> Option.defaultValue false })
+                  MaxFiles = dto.MaxFiles |> Option.ofNullable |> Option.defaultValue defaultLogFiles})
             |> Seq.toList
 
         if configs.Length = 0 then
             [ { FileName = resolvePath baseDir "logs/logs.log"
                 MaxSize = defaultLogSize
-                MaxFiles = defaultLogFiles
-                Buffered = false } ]
+                MaxFiles = defaultLogFiles} ]
         else
             configs

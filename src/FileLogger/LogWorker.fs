@@ -65,8 +65,7 @@ type LogWorker() =
         let stream =
             File.Open(config.FileName, FileMode.Append, FileAccess.Write, FileShare.ReadWrite ||| FileShare.Delete)
 
-        let writer = new StreamWriter(stream, leaveOpen = false)
-        writer.AutoFlush <- not (config.Buffered)
+        let writer = new StreamWriter(stream, leaveOpen = false, AutoFlush = false)
         writer
 
     let deleteOldFiles config =
