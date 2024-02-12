@@ -5,15 +5,12 @@ Microsoft.Extensions.Logging file logger for .NET / ASP.NET Core / .NET Worker.
 ## Why this one?
 
 It is log file appender friendly. That means it does always write in the same (first) log file and on file roll over it
-moves the content on into a new file.
-
-Sadly Microsoft does not provide a file logger. During my research I could not find another file logger with the said
-roll over behaviour.
+moves the content into a new file.
 
 ## Getting started
 
 TODO: Add nuget package
-~~~~
+
 Either use application builder
 
 ```csharp
@@ -28,7 +25,7 @@ or use default builder
 
 TODO: Add default builder extension method
 
-Tip: If you do not add any configuration a default one will be used:
+Tip: If you do not add any configuration, a default one will be used:
 - Log file: `/logs/logs.log` 
 - max file size: 10 MiB
 - max files: 10
