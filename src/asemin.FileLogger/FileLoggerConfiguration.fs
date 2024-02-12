@@ -4,17 +4,16 @@ open System
 open System.Collections.Generic
 open System.IO
 
-[<CLIMutable>]
-type LoggerConfigurationDto =
-    { File: String
-      MaxSize: Nullable<int>
-      MaxFiles: Nullable<int>
-      Buffered: Nullable<bool> }
+// [<CLIMutable>]
+type LoggerConfigurationDto() =
+    member val File = String.Empty with get,set
+    member val MaxSize = Nullable() with get,set
+    member val MaxFiles = Nullable() with get,set
 
 
-[<CLIMutable>]
-type FileLoggerConfigurationDto =
-    { Files: Dictionary<string, LoggerConfigurationDto> }
+// [<CLIMutable>]
+type FileLoggerConfigurationDto() =
+    member val Files : IDictionary<string,LoggerConfigurationDto> = Map([]) with get,set
 
 
 type LoggerConfiguration =
@@ -25,8 +24,9 @@ type LoggerConfiguration =
 module LoggerConfiguration =
     let defaultLogSize = 10 * 1024 * 1024
     let defaultLogFiles = 10
+    let defaultLogFileName = "logs/logs.log"
 
-    let getValues (dict: Dictionary<_, _>) = dict |> Seq.map (_.Value)
+    let getValues (dict: IDictionary<_, _>) = dict |> Seq.map (_.Value)
 
     let resolvePath baseDir path =
         let path = path |> Option.ofObj |> Option.defaultValue String.Empty
@@ -50,7 +50,7 @@ module LoggerConfiguration =
             |> Seq.toList
 
         if configs.Length = 0 then
-            [ { FileName = resolvePath baseDir "logs/logs.log"
+            [ { FileName = resolvePath baseDir defaultLogFileName
                 MaxSize = defaultLogSize
                 MaxFiles = defaultLogFiles} ]
         else

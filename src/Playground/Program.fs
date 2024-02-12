@@ -1,4 +1,5 @@
-﻿open System.Diagnostics
+﻿open System.Collections.Generic
+open System.Diagnostics
 open Microsoft.Extensions.Hosting
 open Microsoft.Extensions.Logging
 open Microsoft.Extensions.DependencyInjection
@@ -23,27 +24,34 @@ let main args =
     task {
         let builder = Host.CreateApplicationBuilder(args)
 
-        let _ =
-            builder.Logging
-                .ClearProviders()
-                .AddFile()
+        FileLoggerExtensions.AddFile(
+            builder.Logging,
+            (fun x ->
+                let configs = dict["default", LoggerConfigurationDto(File = "mylog.log")]
+                x.Files <- configs)
+        )
+        |> ignore
+
+        let _ = builder.Logging.ClearProviders().AddFile()
         use host = builder.Build()
         do! host.StartAsync()
 
         let logger = host.Services.GetRequiredService<ILogger<ExampleClass>>()
-        
+
         let stopwatch = Stopwatch()
-        stopwatch.Start();
-        
+        stopwatch.Start()
+
         System.Console.WriteLine "Start logging"
+
         for i in 1..1_000_000 do
             do executeLogger logger
+
         System.Console.WriteLine $"Finished logging, elapsed {stopwatch.Elapsed.ToString()}"
-        
+
 
         do! host.StopAsync()
         do host.Dispose()
-        
+
         System.Console.WriteLine $"Shutdown, elapsed {stopwatch.Elapsed.ToString()}"
 
         return 0
