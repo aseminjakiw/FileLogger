@@ -20,7 +20,7 @@ let ``no config -> create default log file "logs.log"`` () : unit =
     test.Logger.LogInformation "Hans Dampf"
 
     do flushLogs test
-    test.FileNames |> should be (equal [ $"{test.Directory}\logs\logs.log" ])
+    test.FileNames |> should be (equal [ $"{test.Directory}\logs\ReSharperTestRunner.app.log" ])
 
 
 [<Fact>]

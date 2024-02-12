@@ -26,7 +26,7 @@ or use default builder
 TODO: Add default builder extension method
 
 Tip: If you do not add any configuration, a default one will be used:
-- Log file: `/logs/logs.log` 
+- Log file: `/logs/<appname>.app.log` and `appname` is the `IHostEnvironment.ApplicationName` 
 - max file size: 10 MiB
 - max files: 10
 

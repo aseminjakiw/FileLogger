@@ -13,7 +13,7 @@ open Microsoft.Extensions.Options
 type FileLoggerProvider
     (options: IOptionsMonitor<FileLoggerConfig>, timeProvider: TimeProvider, environment: IHostEnvironment) =
     let controller = new LogController()
-    let mapConfig = LoggerConfiguration.mapDto environment.ContentRootPath
+    let mapConfig = LoggerConfiguration.mapDto environment.ContentRootPath environment.ApplicationName
     do options.CurrentValue |> mapConfig |> controller.UpdateConfig
 
     let changeSubscription =
