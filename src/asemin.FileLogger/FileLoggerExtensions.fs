@@ -17,13 +17,14 @@ type FileLoggerExtensions =
         do builder.Services.TryAddEnumerable(ServiceDescriptor.Singleton<ILoggerProvider, FileLoggerProvider>())
 
         do
-            LoggerProviderOptions.RegisterProviderOptions<FileLoggerConfigurationDto, FileLoggerProvider>(
+            LoggerProviderOptions.RegisterProviderOptions<FileLoggerConfig, FileLoggerProvider>(
                 builder.Services
             )
 
         builder
-
-    static member AddFile(builder: ILoggingBuilder, configure: Action<FileLoggerConfigurationDto>) =
+    
+    [<Extension>]
+    static member AddFile(builder: ILoggingBuilder, configure: Action<FileLoggerConfig>) =
         do builder.AddFile() |> ignore
         do builder.Services.Configure configure |> ignore
         builder

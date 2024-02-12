@@ -4,16 +4,13 @@ open System
 open System.Collections.Generic
 open System.IO
 
-// [<CLIMutable>]
-type LoggerConfigurationDto() =
+type LoggerConfig() =
     member val File = String.Empty with get,set
     member val MaxSize = Nullable() with get,set
     member val MaxFiles = Nullable() with get,set
 
-
-// [<CLIMutable>]
-type FileLoggerConfigurationDto() =
-    member val Files : IDictionary<string,LoggerConfigurationDto> = Map([]) with get,set
+type FileLoggerConfig() =
+    member val Files : IDictionary<string,LoggerConfig> = Dictionary<_,_>([]) with get,set
 
 
 type LoggerConfiguration =
@@ -37,7 +34,7 @@ module LoggerConfiguration =
         else
             Path.Combine(baseDir, path)
 
-    let mapDto baseDir (dto: FileLoggerConfigurationDto) =
+    let mapDto baseDir (dto: FileLoggerConfig) =
         let configs =
             dto.Files
             |> Option.ofObj
