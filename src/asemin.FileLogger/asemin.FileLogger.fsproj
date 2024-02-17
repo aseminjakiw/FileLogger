@@ -1,19 +1,30 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
-        <GenerateDocumentationFile>true</GenerateDocumentationFile>
-
+        <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
+        
         <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
-        <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <Version>0.5.0</Version>
         <Authors>Alexander Seminjakiw</Authors>
         <Company>N/A</Company>
-        <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
         <Description>File logger for (ASP.NET Core) Microsoft logger</Description>
+        <Copyright>Copyright © Alexander Seminjakiw 2024</Copyright>
+        <Summary>File logger for (ASP.NET Core) Microsoft logger</Summary>
+        <NeutralLanguage>en-US</NeutralLanguage>
+        <Title>FileLogger</Title>
+        <PackageId>asemin.FileLogger</PackageId>
         <PackageTags>log;logger;logging;file logger;ASP.NET Core;.NET Worker</PackageTags>
-        <Platforms>AnyCPU</Platforms>
-        <Version>0.1.0</Version>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+<!--        <PackageIcon>packageIcon.png</PackageIcon>-->
+<!--        <PackageIconUrl>https://github.com/aseminjakiw/FileLogger</PackageIconUrl>-->
+        <PackageProjectUrl>https://github.com/aseminjakiw/FileLogger</PackageProjectUrl>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>        
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+        <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     </PropertyGroup>
 
     <ItemGroup>
@@ -25,13 +36,14 @@
         <Compile Include="FileLogger.fs"/>
         <Compile Include="FileLoggerProvider.fs"/>
         <Compile Include="FileLoggerExtensions.fs"/>
+        <None Include="..\..\README.md" Pack="true" PackagePath="\"/>
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="6.0.0"/>
-        <PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0"/>
-        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0"/>
-        <PackageReference Include="Microsoft.Extensions.Logging.Configuration" Version="6.0.0"/>
+        <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="8.0.0"/>
+        <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0"/>
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0"/>
+        <PackageReference Include="Microsoft.Extensions.Logging.Configuration" Version="8.0.0"/>
     </ItemGroup>
 
 </Project>

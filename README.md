@@ -9,7 +9,10 @@ moves the content into a new file.
 
 ## Getting started
 
-TODO: Add nuget package
+Install nuget package https://www.nuget.org/packages/asemin.FileLogger/
+```cmd
+dotnet add package asemin.FileLogger
+```
 
 Either use application builder
 
@@ -101,7 +104,6 @@ builder.Logging.AddFile(fun config ->
 ## TODOs
 
 - add automatic build pipeline
-- add nuget package
 - add Microsoft.Extensions.Hosting.Host.CreateDefaultBuilder extension method
 - try out in serious applications
 - add support for different filters for each log file
