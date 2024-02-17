@@ -8,12 +8,17 @@ open Microsoft.Extensions.Logging
 open Microsoft.Extensions.Options
 
 
+
+
 [<UnsupportedOSPlatform("browser")>]
 [<ProviderAlias("File")>]
 type FileLoggerProvider
-    (options: IOptionsMonitor<FileLoggerConfig>, timeProvider: TimeProvider, environment: IHostEnvironment) =
+    (options: IOptionsMonitor<FileLoggerConfig>, timeProvider: ITimeProvider, environment: IHostEnvironment) =
     let controller = new LogController()
-    let mapConfig = LoggerConfiguration.mapDto environment.ContentRootPath environment.ApplicationName
+
+    let mapConfig =
+        LoggerConfiguration.mapDto environment.ContentRootPath environment.ApplicationName
+
     do options.CurrentValue |> mapConfig |> controller.UpdateConfig
 
     let changeSubscription =
@@ -21,15 +26,15 @@ type FileLoggerProvider
 
     let loggers = ConcurrentDictionary<string, FileLogger>()
 
-    let mutable isDiposed = false
+    let mutable isDisposed = false
 
     interface ILoggerProvider with
         member this.CreateLogger(categoryName) =
-            ObjectDisposedException.ThrowIf(isDiposed, this)
+            RaiseIf.objectDisposed isDisposed this
             loggers.GetOrAdd(categoryName, (fun name -> FileLogger(categoryName, timeProvider, controller.WriteLog)))
 
         member this.Dispose() =
-            isDiposed <- true
+            isDisposed <- true
             loggers.Clear()
             changeSubscription.Dispose()
             controller.Dispose()

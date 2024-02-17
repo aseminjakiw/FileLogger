@@ -4,6 +4,13 @@ open System
 open System.IO
 open System.Text
 
+module RaiseIf =
+    let objectDisposed isDisposed obj =
+        if isDisposed then
+            ObjectDisposedException (obj.GetType().Name) |> raise
+        else
+            ()
+
 // ###################################################################
 // #   F# wrapper for System.Text.StringBuilder
 // ###################################################################

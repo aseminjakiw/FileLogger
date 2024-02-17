@@ -4,7 +4,14 @@ open System
 open System.Runtime.CompilerServices
 open Microsoft.Extensions.Logging
 
-type FileLogger(category: string, timeProvider: TimeProvider, writeLog) =
+type ITimeProvider =
+    abstract member GetLocalNow: unit -> DateTimeOffset
+    
+type SystemTimeProvider() =
+    interface ITimeProvider with
+        member this.GetLocalNow() = DateTimeOffset.Now
+
+type FileLogger(category: string, timeProvider: ITimeProvider, writeLog) =
     interface ILogger with
         member this.BeginScope(state) = Unsafe.NullRef<IDisposable>()
         member this.IsEnabled(logLevel) = true //TODO: respect logLevel

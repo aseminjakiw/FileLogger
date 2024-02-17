@@ -51,7 +51,7 @@ type LogController() =
             log |> WriteLog |> agent.Post
 
     member this.UpdateConfig config =
-        ObjectDisposedException.ThrowIf(isDisposed, this)
+        RaiseIf.objectDisposed isDisposed this
         config |> UpdateConfig |> agent.Post
 
     member this.Dispose() =

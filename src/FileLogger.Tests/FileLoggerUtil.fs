@@ -22,21 +22,23 @@ type OtherTestClass() =
     class
     end
 
+type TestTimeProvider() =
+    member val CurrentTime = DateTimeOffset.MinValue with get, set
+
+    interface ITimeProvider with
+        member this.GetLocalNow() = this.CurrentTime
 
 /// Contains temp directory for test and disposes it
 type TestContext(configJson: string, testDir: TestDirectory) =
     let builder = Host.CreateApplicationBuilder()
     do builder.Environment.ContentRootPath <- testDir.Path |> FilePath.value
     let jsonStream = Encoding.UTF8.GetBytes(configJson) |> MemoryStream
+    do builder.Configuration.AddJsonStream(jsonStream) |> ignore
 
-    let _ = builder.Configuration.AddJsonStream(jsonStream)
-
-    let _ = builder.Logging.ClearProviders()
-    let _ = builder.Logging.SetMinimumLevel(LogLevel.Trace)
-
-    let _ = builder.Logging.AddFile()
-    let timeProvider = FakeTimeProvider()
-    let _ = builder.Services.AddSingleton<TimeProvider>(timeProvider)
+    do builder.Logging.ClearProviders() |> ignore
+    do builder.Logging.SetMinimumLevel(LogLevel.Trace) |> ignore
+    do builder.Services.AddSingleton<ITimeProvider, TestTimeProvider>() |> ignore
+    do builder.Logging.AddFile() |> ignore
     let host = builder.Build()
     new(configJson) = new TestContext(configJson, new TestDirectory())
 
@@ -44,11 +46,14 @@ type TestContext(configJson: string, testDir: TestDirectory) =
     member this.OtherLogger = host.Services.GetRequiredService<ILogger<OtherTestClass>>()
     member this.Directory = testDir.Path |> FilePath.value
     member this.FileNames = this.Directory |> getFileNames
-    member this.Time = timeProvider
+
+    member this.Time =
+        host.Services.GetRequiredService<ITimeProvider>() :?> TestTimeProvider
+
     member this.Host = host
 
     member this.SetTime isoTime =
-        DateTimeOffset.Parse isoTime |> timeProvider.SetUtcNow
+        this.Time.CurrentTime <- DateTimeOffset.Parse isoTime
 
 
     interface IDisposable with

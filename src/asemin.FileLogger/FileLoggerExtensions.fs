@@ -13,7 +13,7 @@ type FileLoggerExtensions =
     [<Extension>]
     static member AddFile(builder: ILoggingBuilder) =
         do builder.AddConfiguration()
-        do builder.Services.TryAddSingleton<TimeProvider>(TimeProvider.System)
+        do builder.Services.TryAddSingleton<ITimeProvider,SystemTimeProvider>() 
         do builder.Services.TryAddEnumerable(ServiceDescriptor.Singleton<ILoggerProvider, FileLoggerProvider>())
 
         do

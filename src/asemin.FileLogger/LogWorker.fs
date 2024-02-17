@@ -146,15 +146,15 @@ type LogWorker() =
     let mutable isDisposed = false
 
     member this.Post message =
-        ObjectDisposedException.ThrowIf(isDisposed, this)
+        RaiseIf.objectDisposed isDisposed this
         agent.Post message
 
     member this.WriteLog log =
-        ObjectDisposedException.ThrowIf(isDisposed, this)
+        RaiseIf.objectDisposed isDisposed this
         log |> WriteLog |> this.Post
 
     member this.UpdateConfig config =
-        ObjectDisposedException.ThrowIf(isDisposed, this)
+        RaiseIf.objectDisposed isDisposed this
         config |> UpdateConfig |> this.Post
 
     member this.Close() =
