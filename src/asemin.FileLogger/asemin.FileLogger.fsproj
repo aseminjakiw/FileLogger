@@ -3,6 +3,17 @@
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
+
+        <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+        <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <Authors>Alexander Seminjakiw</Authors>
+        <Company>N/A</Company>
+        <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+        <Description>File logger for (ASP.NET Core) Microsoft logger</Description>
+        <PackageTags>log;logger;logging;file logger;ASP.NET Core;.NET Worker</PackageTags>
+        <Platforms>AnyCPU</Platforms>
+        <Version>0.1.0</Version>
     </PropertyGroup>
 
     <ItemGroup>
