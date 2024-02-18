@@ -6,6 +6,7 @@ open Microsoft.Extensions.Logging
 open Xunit
 open FsUnit
 
+open Util
 open FileLogger.Tests.FileLoggerUtil
 
 let config =
@@ -40,11 +41,9 @@ let ``Write log message`` () : unit =
 
     do flushLogs test
 
-    Path.Combine(test.Directory, "logFile.log")
+    combinePath2 test.Directory "logFile.log"
     |> getLogs
-    |> should
-        be
-        (equivalent [ "2022-05-06 21:43:23.456 [00] [INFO ] [FileLogger.Tests.FileLoggerUtil.TestClass] test log" ])
+    |> shouldBeEqual [ "2022-05-06 21:43:23.456 [00] [INFO ] [FileLogger.Tests.FileLoggerUtil.TestClass] test log" ]
 
 
 [<Fact>]
@@ -60,12 +59,10 @@ let ``Write different log messages`` () : unit =
 
     Path.Combine(test.Directory, "logFile.log")
     |> getLogs
-    |> should
-        be
-        (equivalent
-            [ "2022-05-06 21:43:23.456 [00] [INFO ] [FileLogger.Tests.FileLoggerUtil.TestClass] test log1"
-              "2022-05-06 21:43:23.456 [00] [INFO ] [FileLogger.Tests.FileLoggerUtil.TestClass] test log2"
-              "2022-05-06 21:43:23.456 [00] [INFO ] [FileLogger.Tests.FileLoggerUtil.TestClass] test log3" ])
+    |> shouldBeEqual
+        [ "2022-05-06 21:43:23.456 [00] [INFO ] [FileLogger.Tests.FileLoggerUtil.TestClass] test log1"
+          "2022-05-06 21:43:23.456 [00] [INFO ] [FileLogger.Tests.FileLoggerUtil.TestClass] test log2"
+          "2022-05-06 21:43:23.456 [00] [INFO ] [FileLogger.Tests.FileLoggerUtil.TestClass] test log3" ]
 
 [<Fact>]
 let ``Write different times`` () : unit =
@@ -84,12 +81,10 @@ let ``Write different times`` () : unit =
 
     Path.Combine(test.Directory, "logFile.log")
     |> getLogs
-    |> should
-        be
-        (equivalent
-            [ "2022-05-06 21:43:23.456 [00] [INFO ] [FileLogger.Tests.FileLoggerUtil.TestClass] test log1"
-              "2023-12-31 21:43:23.456 [00] [INFO ] [FileLogger.Tests.FileLoggerUtil.TestClass] test log2"
-              "2024-01-01 05:43:23.456 [00] [INFO ] [FileLogger.Tests.FileLoggerUtil.TestClass] test log3" ])
+    |> shouldBeEqual
+        [ "2022-05-06 21:43:23.456 [00] [INFO ] [FileLogger.Tests.FileLoggerUtil.TestClass] test log1"
+          "2023-12-31 21:43:23.456 [00] [INFO ] [FileLogger.Tests.FileLoggerUtil.TestClass] test log2"
+          "2024-01-01 05:43:23.456 [00] [INFO ] [FileLogger.Tests.FileLoggerUtil.TestClass] test log3" ]
 
 [<Fact>]
 let ``Write log level`` () : unit =
@@ -107,15 +102,13 @@ let ``Write log level`` () : unit =
 
     Path.Combine(test.Directory, "logFile.log")
     |> getLogs
-    |> should
-        be
-        (equivalent
-            [ "2022-05-06 21:43:23.456 [00] [TRACE] [FileLogger.Tests.FileLoggerUtil.TestClass] test log"
-              "2022-05-06 21:43:23.456 [00] [DEBUG] [FileLogger.Tests.FileLoggerUtil.TestClass] test log"
-              "2022-05-06 21:43:23.456 [00] [INFO ] [FileLogger.Tests.FileLoggerUtil.TestClass] test log"
-              "2022-05-06 21:43:23.456 [00] [WARN ] [FileLogger.Tests.FileLoggerUtil.TestClass] test log"
-              "2022-05-06 21:43:23.456 [00] [ERROR] [FileLogger.Tests.FileLoggerUtil.TestClass] test log"
-              "2022-05-06 21:43:23.456 [00] [FATAL] [FileLogger.Tests.FileLoggerUtil.TestClass] test log" ])
+    |> shouldBeEqual
+        [ "2022-05-06 21:43:23.456 [00] [TRACE] [FileLogger.Tests.FileLoggerUtil.TestClass] test log"
+          "2022-05-06 21:43:23.456 [00] [DEBUG] [FileLogger.Tests.FileLoggerUtil.TestClass] test log"
+          "2022-05-06 21:43:23.456 [00] [INFO ] [FileLogger.Tests.FileLoggerUtil.TestClass] test log"
+          "2022-05-06 21:43:23.456 [00] [WARN ] [FileLogger.Tests.FileLoggerUtil.TestClass] test log"
+          "2022-05-06 21:43:23.456 [00] [ERROR] [FileLogger.Tests.FileLoggerUtil.TestClass] test log"
+          "2022-05-06 21:43:23.456 [00] [FATAL] [FileLogger.Tests.FileLoggerUtil.TestClass] test log" ]
 
 [<Fact>]
 let ``Write different categories`` () : unit =
@@ -129,11 +122,9 @@ let ``Write different categories`` () : unit =
 
     Path.Combine(test.Directory, "logFile.log")
     |> getLogs
-    |> should
-        be
-        (equivalent
-            [ "2022-05-06 21:43:23.456 [00] [INFO ] [FileLogger.Tests.FileLoggerUtil.TestClass] test log"
-              "2022-05-06 21:43:23.456 [00] [INFO ] [FileLogger.Tests.FileLoggerUtil.OtherTestClass] test log" ])
+    |> shouldBeEqual
+        [ "2022-05-06 21:43:23.456 [00] [INFO ] [FileLogger.Tests.FileLoggerUtil.TestClass] test log"
+          "2022-05-06 21:43:23.456 [00] [INFO ] [FileLogger.Tests.FileLoggerUtil.OtherTestClass] test log" ]
 
 [<Fact>]
 let ``File roll over -> move content to archive file and still write in new file`` () : unit =
@@ -163,16 +154,12 @@ let ``File roll over -> move content to archive file and still write in new file
 
     Path.Combine(test.Directory, "logFile.log")
     |> getLogs
-    |> should
-        be
-        (equivalent [ "2022-05-06 21:43:23.456 [00] [INFO ] [FileLogger.Tests.FileLoggerUtil.TestClass] test log2" ])
+    |> shouldBeEqual [ "2022-05-06 21:43:23.456 [00] [INFO ] [FileLogger.Tests.FileLoggerUtil.TestClass] test log2" ]
 
 
     $"{test.Directory}\logFile.1.log"
     |> getLogs
-    |> should
-        be
-        (equivalent [ "2022-05-06 21:43:23.456 [00] [INFO ] [FileLogger.Tests.FileLoggerUtil.TestClass] test log1" ])
+    |> shouldBeEqual [ "2022-05-06 21:43:23.456 [00] [INFO ] [FileLogger.Tests.FileLoggerUtil.TestClass] test log1" ]
 
 
 [<Fact>]
@@ -204,13 +191,9 @@ let ``multiple loggers -> write in both files`` () : unit =
 
     Path.Combine(test.Directory, "logFile.log")
     |> getLogs
-    |> should
-        be
-        (equivalent [ "2022-05-06 21:43:23.456 [00] [INFO ] [FileLogger.Tests.FileLoggerUtil.TestClass] test log" ])
+    |> shouldBeEqual [ "2022-05-06 21:43:23.456 [00] [INFO ] [FileLogger.Tests.FileLoggerUtil.TestClass] test log" ]
 
 
     Path.Combine(test.Directory, "logFile.log")
     |> getLogs
-    |> should
-        be
-        (equivalent [ "2022-05-06 21:43:23.456 [00] [INFO ] [FileLogger.Tests.FileLoggerUtil.TestClass] test log" ])
+    |> shouldBeEqual [ "2022-05-06 21:43:23.456 [00] [INFO ] [FileLogger.Tests.FileLoggerUtil.TestClass] test log" ]

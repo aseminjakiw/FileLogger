@@ -3,9 +3,15 @@
 open System
 open System.IO
 open Xunit
+open FsUnit
 
 open asemin.FileLogger
+        
+let combinePath2 path1 path2 = Path.Combine(path1, path2)
+let combinePath3 path1 path2 path3 = Path.Combine(path1, path2, path3)
 
+let shouldBeEqual (expected: string list) actual =
+    actual |> should be (equivalent expected)
 
 // ###################################################################
 // #   helper for creating temp directory and deleting it
