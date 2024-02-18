@@ -29,9 +29,7 @@ let normalizeThreadId (lines: string array) =
 let getLogs path =
     path |> File.ReadAllLines |> normalizeThreadId
 
-
 let flushLogs (test: TestContext) = test.Host.Dispose()
-
 
 [<Fact>]
 let ``Write log message`` () : unit =
@@ -42,7 +40,7 @@ let ``Write log message`` () : unit =
 
     do flushLogs test
 
-    $"{test.Directory}\logFile.log"
+    Path.Combine(test.Directory, "logFile.log")
     |> getLogs
     |> should
         be
@@ -60,7 +58,7 @@ let ``Write different log messages`` () : unit =
 
     do flushLogs test
 
-    $"{test.Directory}\logFile.log"
+    Path.Combine(test.Directory, "logFile.log")
     |> getLogs
     |> should
         be
@@ -84,7 +82,7 @@ let ``Write different times`` () : unit =
 
     do flushLogs test
 
-    $"{test.Directory}\logFile.log"
+    Path.Combine(test.Directory, "logFile.log")
     |> getLogs
     |> should
         be
@@ -107,7 +105,7 @@ let ``Write log level`` () : unit =
 
     do flushLogs test
 
-    $"{test.Directory}\logFile.log"
+    Path.Combine(test.Directory, "logFile.log")
     |> getLogs
     |> should
         be
@@ -129,7 +127,7 @@ let ``Write different categories`` () : unit =
 
     do flushLogs test
 
-    $"{test.Directory}\logFile.log"
+    Path.Combine(test.Directory, "logFile.log")
     |> getLogs
     |> should
         be
@@ -163,7 +161,7 @@ let ``File roll over -> move content to archive file and still write in new file
 
     do flushLogs test
 
-    $"{test.Directory}\logFile.log"
+    Path.Combine(test.Directory, "logFile.log")
     |> getLogs
     |> should
         be
@@ -204,14 +202,14 @@ let ``multiple loggers -> write in both files`` () : unit =
 
     do flushLogs test
 
-    $"{test.Directory}\logFile.log"
+    Path.Combine(test.Directory, "logFile.log")
     |> getLogs
     |> should
         be
         (equivalent [ "2022-05-06 21:43:23.456 [00] [INFO ] [FileLogger.Tests.FileLoggerUtil.TestClass] test log" ])
 
 
-    $"{test.Directory}\other.log"
+    Path.Combine(test.Directory, "logFile.log")
     |> getLogs
     |> should
         be
