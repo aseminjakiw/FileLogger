@@ -1,6 +1,5 @@
 ﻿namespace asemin.FileLogger
 
-open System
 open System.Collections.Concurrent
 open System.Runtime.Versioning
 open Microsoft.Extensions.Hosting

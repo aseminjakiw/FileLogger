@@ -1,6 +1,5 @@
 ﻿module FileLogger.Tests.FilterTests
 
-open NUnit.Framework
 open Xunit
 
 

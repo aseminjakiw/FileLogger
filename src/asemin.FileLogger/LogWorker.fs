@@ -81,7 +81,10 @@ type LogWorker() =
     let archiveCurrentLog config =
         let archiveName = getNextArchiveName config
         File.Copy(config.FileName, archiveName)
-        use x = File.Open(config.FileName, FileMode.Truncate, FileAccess.Write, FileShare.ReadWrite)
+
+        use x =
+            File.Open(config.FileName, FileMode.Truncate, FileAccess.Write, FileShare.ReadWrite)
+
         do x.Dispose()
         deleteOldFiles config
 

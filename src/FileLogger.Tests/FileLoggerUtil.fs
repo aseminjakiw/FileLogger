@@ -10,8 +10,6 @@ open Microsoft.Extensions.Logging
 open Microsoft.Extensions.DependencyInjection
 open Microsoft.Extensions.Configuration
 
-open FileLogger
-open Microsoft.Extensions.Time.Testing
 
 /// Class for requesting logger with DI
 type TestClass() =

@@ -10,6 +10,7 @@ moves the content into a new file.
 ## Getting started
 
 Install nuget package https://www.nuget.org/packages/asemin.FileLogger/
+
 ```cmd
 dotnet add package asemin.FileLogger
 ```
@@ -29,7 +30,8 @@ or use default builder
 TODO: Add default builder extension method
 
 Tip: If you do not add any configuration, a default one will be used:
-- Log file: `/logs/<appname>.app.log` and `appname` is the `IHostEnvironment.ApplicationName` 
+
+- Log file: `/logs/<appname>.app.log` and `appname` is the `IHostEnvironment.ApplicationName`
 - max file size: 10 MiB
 - max files: 10
 
@@ -73,6 +75,7 @@ by .NET configuration. So you can make proper overrides with debug or production
 | `MaxFiles` | `10`                | Max number of log files. Older files get deleted first.                                                               |
 
 ### C# code
+
 ```csharp
 builder.Logging.AddFile(x =>
 {
@@ -92,6 +95,7 @@ builder.Logging.AddFile(x =>
 ```
 
 ### F# code
+
 ```fsharp
 builder.Logging.AddFile(fun config ->
     config.Files <-

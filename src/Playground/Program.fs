@@ -1,5 +1,4 @@
-﻿open System.Collections.Generic
-open System.Diagnostics
+﻿open System.Diagnostics
 open Microsoft.Extensions.Hosting
 open Microsoft.Extensions.Logging
 open Microsoft.Extensions.DependencyInjection

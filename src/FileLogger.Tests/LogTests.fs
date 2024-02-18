@@ -4,7 +4,6 @@ open System.IO
 open System.Text.RegularExpressions
 open Microsoft.Extensions.Logging
 open Xunit
-open FsUnit
 
 open Util
 open FileLogger.Tests.FileLoggerUtil
@@ -57,7 +56,7 @@ let ``Write different log messages`` () : unit =
 
     do flushLogs test
 
-    Path.Combine(test.Directory, "logFile.log")
+    combinePath2 test.Directory "logFile.log"
     |> getLogs
     |> shouldBeEqual
         [ "2022-05-06 21:43:23.456 [00] [INFO ] [FileLogger.Tests.FileLoggerUtil.TestClass] test log1"
@@ -79,7 +78,7 @@ let ``Write different times`` () : unit =
 
     do flushLogs test
 
-    Path.Combine(test.Directory, "logFile.log")
+    combinePath2 test.Directory "logFile.log"
     |> getLogs
     |> shouldBeEqual
         [ "2022-05-06 21:43:23.456 [00] [INFO ] [FileLogger.Tests.FileLoggerUtil.TestClass] test log1"
@@ -100,7 +99,7 @@ let ``Write log level`` () : unit =
 
     do flushLogs test
 
-    Path.Combine(test.Directory, "logFile.log")
+    combinePath2 test.Directory "logFile.log"
     |> getLogs
     |> shouldBeEqual
         [ "2022-05-06 21:43:23.456 [00] [TRACE] [FileLogger.Tests.FileLoggerUtil.TestClass] test log"
@@ -120,7 +119,7 @@ let ``Write different categories`` () : unit =
 
     do flushLogs test
 
-    Path.Combine(test.Directory, "logFile.log")
+    combinePath2 test.Directory "logFile.log"
     |> getLogs
     |> shouldBeEqual
         [ "2022-05-06 21:43:23.456 [00] [INFO ] [FileLogger.Tests.FileLoggerUtil.TestClass] test log"
@@ -152,7 +151,7 @@ let ``File roll over -> move content to archive file and still write in new file
 
     do flushLogs test
 
-    Path.Combine(test.Directory, "logFile.log")
+    combinePath2 test.Directory "logFile.log"
     |> getLogs
     |> shouldBeEqual [ "2022-05-06 21:43:23.456 [00] [INFO ] [FileLogger.Tests.FileLoggerUtil.TestClass] test log2" ]
 
@@ -189,11 +188,11 @@ let ``multiple loggers -> write in both files`` () : unit =
 
     do flushLogs test
 
-    Path.Combine(test.Directory, "logFile.log")
+    combinePath2 test.Directory "logFile.log"
     |> getLogs
     |> shouldBeEqual [ "2022-05-06 21:43:23.456 [00] [INFO ] [FileLogger.Tests.FileLoggerUtil.TestClass] test log" ]
 
 
-    Path.Combine(test.Directory, "logFile.log")
+    combinePath2 test.Directory "logFile.log"
     |> getLogs
     |> shouldBeEqual [ "2022-05-06 21:43:23.456 [00] [INFO ] [FileLogger.Tests.FileLoggerUtil.TestClass] test log" ]

@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
-        
+
         <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <Version>0.6.0</Version>
@@ -16,10 +16,10 @@
         <PackageId>asemin.FileLogger</PackageId>
         <PackageTags>log;logger;logging;file logger;ASP.NET Core;.NET Worker</PackageTags>
         <PackageReadmeFile>README.md</PackageReadmeFile>
-<!--        <PackageIcon>packageIcon.png</PackageIcon>-->
-<!--        <PackageIconUrl>https://github.com/aseminjakiw/FileLogger</PackageIconUrl>-->
+        <!--        <PackageIcon>packageIcon.png</PackageIcon>-->
+        <!--        <PackageIconUrl>https://github.com/aseminjakiw/FileLogger</PackageIconUrl>-->
         <PackageProjectUrl>https://github.com/aseminjakiw/FileLogger</PackageProjectUrl>
-        <PackageLicenseExpression>MIT</PackageLicenseExpression>        
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PublishRepositoryUrl>true</PublishRepositoryUrl>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <IncludeSymbols>true</IncludeSymbols>

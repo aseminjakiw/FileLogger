@@ -8,12 +8,12 @@
     <ItemGroup>
         <Compile Include="Program.fs"/>
         <Content Include="appsettings.json">
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\asemin.FileLogger\asemin.FileLogger.fsproj" />
+        <ProjectReference Include="..\asemin.FileLogger\asemin.FileLogger.fsproj"/>
     </ItemGroup>
 
     <ItemGroup>

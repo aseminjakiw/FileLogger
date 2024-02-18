@@ -1,11 +1,9 @@
 ﻿module FileLogger.Tests.FileHandlingTests
 
-open System.IO
 open asemin.FileLogger
 open FileLogger.Tests.Util
 open Microsoft.Extensions.Logging
 open Xunit
-open FsUnit
 
 open FileLogger.Tests.FileLoggerUtil
 

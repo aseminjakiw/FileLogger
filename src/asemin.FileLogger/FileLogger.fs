@@ -6,7 +6,7 @@ open Microsoft.Extensions.Logging
 
 type ITimeProvider =
     abstract member GetLocalNow: unit -> DateTimeOffset
-    
+
 type SystemTimeProvider() =
     interface ITimeProvider with
         member this.GetLocalNow() = DateTimeOffset.Now

@@ -21,12 +21,14 @@ type LoggerConfiguration =
 module LoggerConfiguration =
     let defaultLogSize = 10 * 1024 * 1024
     let defaultLogFiles = 10
+
     let defaultLogFileName appName =
         let appName =
             if String.IsNullOrWhiteSpace appName then
                 "application"
             else
                 appName
+
         "logs/" + appName + ".app.log"
 
     let getValues (dict: IDictionary<_, _>) = dict |> Seq.map (_.Value)

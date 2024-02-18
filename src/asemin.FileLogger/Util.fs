@@ -7,7 +7,7 @@ open System.Text
 module RaiseIf =
     let objectDisposed isDisposed obj =
         if isDisposed then
-            ObjectDisposedException (obj.GetType().Name) |> raise
+            ObjectDisposedException(obj.GetType().Name) |> raise
         else
             ()
 
