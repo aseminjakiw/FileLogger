@@ -156,7 +156,7 @@ let ``File roll over -> move content to archive file and still write in new file
     |> shouldBeEqual [ "2022-05-06 21:43:23.456 [00] [INFO ] [FileLogger.Tests.FileLoggerUtil.TestClass] test log2" ]
 
 
-    $"{test.Directory}\logFile.1.log"
+    combinePath2 test.Directory "logFile.1.log"
     |> getLogs
     |> shouldBeEqual [ "2022-05-06 21:43:23.456 [00] [INFO ] [FileLogger.Tests.FileLoggerUtil.TestClass] test log1" ]
 
