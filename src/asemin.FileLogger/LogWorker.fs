@@ -4,12 +4,12 @@ open System
 open System.IO
 open System.Text.RegularExpressions
 
-type Writer =
+type WriterState =
     { Writer: StreamWriter
       Config: LoggerConfiguration }
 
 type LogWorkerState =
-    { Writer: Writer option
+    { Writer: WriterState option
       Config: LoggerConfiguration option }
 
 type LogWorkerMessage =
@@ -24,7 +24,7 @@ type LogWorker() =
 
     let tryDispose writer =
         match writer with
-        | Some(writer: Writer) -> dispose writer.Writer
+        | Some(writer: WriterState) -> dispose writer.Writer
         | None -> ()
 
     let getArchiveFiles config =
