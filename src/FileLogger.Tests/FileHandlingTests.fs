@@ -191,7 +191,7 @@ let ``log bigger than max size -> move old file and start new with configured fi
           combinePath2 test.Directory "logFile.1.log" ]
 
 
-[<Fact(Skip ="Test build pipeline")>]
+[<Fact>]
 let ``more log files than max files -> delete older ones`` () : unit =
     use test =
         """
