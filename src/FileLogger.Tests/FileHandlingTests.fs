@@ -1,9 +1,11 @@
 ﻿module FileLogger.Tests.FileHandlingTests
 
+open System.IO
 open asemin.FileLogger
 open FileLogger.Tests.Util
 open Microsoft.Extensions.Logging
 open Xunit
+open FsUnit
 
 open FileLogger.Tests.FileLoggerUtil
 
@@ -20,8 +22,11 @@ let ``no config -> create default log file "logs.log"`` () : unit =
 
     do flushLogs test
 
-    test.FileNames
-    |> shouldBeEqual [ combinePath3 test.Directory "logs" "ReSharperTestRunner.app.log" ]
+    let fileNames = test.FileNames ()
+    Assert.Equal(fileNames.Length, 1)    
+    let fileName = fileNames[0]
+    Path.GetDirectoryName fileName |> should be (equal (combinePath2 test.Directory "logs"))
+    Assert.True(fileName.EndsWith ".app.log")
 
 
 [<Fact>]
@@ -45,7 +50,7 @@ let ``File name in config -> use file name`` () : unit =
     test.Logger.LogInformation "test log"
 
     do flushLogs test
-    test.FileNames |> shouldBeEqual [ combinePath2 test.Directory "logFile.log" ]
+    test.FileNames () |> shouldBeEqual [ combinePath2 test.Directory "logFile.log" ]
 
 
 [<Fact>]
@@ -73,7 +78,7 @@ let ``multiple file loggers -> write in both`` () : unit =
 
     do flushLogs test
 
-    test.FileNames
+    test.FileNames ()
     |> shouldBeEqual
         [ combinePath2 test.Directory "logFile.log"
           combinePath2 test.Directory "otherLogFile.log" ]
@@ -100,7 +105,7 @@ let ``relative path (backward slash) in file name -> append path to current dir`
 
     do flushLogs test
 
-    test.FileNames
+    test.FileNames ()
     |> shouldBeEqual [ combinePath3 test.Directory "logs" "logFile.log" ]
 
 [<Fact>]
@@ -125,7 +130,7 @@ let ``relative path (forward slash) in file name -> append path to current dir``
 
     do flushLogs test
 
-    test.FileNames
+    test.FileNames ()
     |> shouldBeEqual [ combinePath3 test.Directory "logs" "logFile.log" ]
 
 [<Fact>]
@@ -153,7 +158,7 @@ let ``absolute path in file name -> use absolute path`` () : unit =
     test.Logger.LogInformation "test log"
     do flushLogs test
 
-    test.FileNames
+    test.FileNames ()
     |> shouldBeEqual [ combinePath2 (testDir.Path |> FilePath.value) "logFile.log" ]
 
 [<Fact>]
@@ -180,7 +185,7 @@ let ``log bigger than max size -> move old file and start new with configured fi
 
     do flushLogs test
 
-    test.FileNames
+    test.FileNames ()
     |> shouldBeEqual
         [ combinePath2 test.Directory "logFile.log"
           combinePath2 test.Directory "logFile.1.log" ]
@@ -211,7 +216,7 @@ let ``more log files than max files -> delete older ones`` () : unit =
 
     do flushLogs test
 
-    test.FileNames
+    test.FileNames ()
     |> shouldBeEqual
         [ combinePath2 test.Directory "logFile.log"
           combinePath2 test.Directory "logFile.108.log"
@@ -244,7 +249,7 @@ let ``log bigger than max size -> append correct number to archived file`` () : 
     do flushLogs test
 
 
-    test.FileNames
+    test.FileNames ()
     |> shouldBeEqual
         [ combinePath2 test.Directory "logFile.log"
           combinePath2 test.Directory "logFile.1.log"

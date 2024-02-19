@@ -43,7 +43,7 @@ type TestContext(configJson: string, testDir: TestDirectory) =
     member this.Logger = host.Services.GetRequiredService<ILogger<TestClass>>()
     member this.OtherLogger = host.Services.GetRequiredService<ILogger<OtherTestClass>>()
     member this.Directory = testDir.Path |> FilePath.value
-    member this.FileNames = this.Directory |> getFileNames
+    member this.FileNames () = this.Directory |> getFileNames
 
     member this.Time =
         host.Services.GetRequiredService<ITimeProvider>() :?> TestTimeProvider
