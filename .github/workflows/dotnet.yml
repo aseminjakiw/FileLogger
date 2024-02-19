@@ -12,6 +12,11 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    permissions:
+      packages: read
+      contents: write
+
+
     steps:
     - uses: actions/checkout@v3
     - name: Setup .NET
