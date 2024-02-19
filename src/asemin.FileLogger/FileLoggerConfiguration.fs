@@ -29,12 +29,20 @@ module LoggerConfiguration =
             else
                 appName
 
-        "logs/" + appName + ".app.log"
+        Path.Combine("logs", appName + ".app.log")
 
     let getValues (dict: IDictionary<_, _>) = dict |> Seq.map (_.Value)
 
-    let resolvePath baseDir path =
+    let resolvePath baseDir (path:string) =        
         let path = path |> Option.ofObj |> Option.defaultValue String.Empty
+        let path = path.Replace('\\', '/')
+        let path = 
+            if Path.DirectorySeparatorChar = '\\' then
+                path.Replace('/','\\')
+            else
+                path
+            
+        
         let path = Environment.ExpandEnvironmentVariables path
 
         if Path.IsPathRooted path then
