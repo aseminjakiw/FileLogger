@@ -4,8 +4,10 @@ Microsoft.Extensions.Logging file logger for .NET / ASP.NET Core / .NET Worker.
 
 ## Why this one?
 
-It is log file appender friendly. That means it does always write in the same (first) log file and on file roll over it
-moves the content into a new file.
+**log file appender friendly**. That means it does always write in the same (first) log file and on file roll over it
+moves the content into a new file. So you can use tools like 
+[Tailblazer](https://github.com/RolandPheasant/TailBlazer) or 
+[Advanced Log Viewer](https://github.com/Scarfsail/AdvancedLogViewer)
 
 ## Getting started
 
