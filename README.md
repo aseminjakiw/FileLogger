@@ -26,8 +26,13 @@ builder.Logging.AddFile();
 ```
 
 or use default builder
+```csharp
+using asemin.FileLogger;
 
-TODO: Add default builder extension method
+var builder = Microsoft.Extensions.Hosting.Host.CreateDefaultBuilder(args);
+
+builder.ConfigureLogging(x => x.AddFile());
+```
 
 Tip: If you do not add any configuration, a default one will be used:
 
@@ -107,8 +112,6 @@ builder.Logging.AddFile(fun config ->
 
 ## TODOs
 
-- add automatic build pipeline
-- add Microsoft.Extensions.Hosting.Host.CreateDefaultBuilder extension method
-- try out in serious applications
+- tr~~~~y out in serious applications
 - add support for different filters for each log file
 - Test with Linux
