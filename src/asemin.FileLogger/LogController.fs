@@ -2,11 +2,11 @@
 
 open System
 
-type Worker =
+type WorkerState =
     { Worker: LogWorker
       Config: LoggerConfiguration }
 
-type LogControllerState = { Workers: Worker list }
+type LogControllerState = { Workers: WorkerState list }
 
 type LogControllerMessage =
     | WriteLog of LogEntry
