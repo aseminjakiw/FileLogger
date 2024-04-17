@@ -67,10 +67,23 @@ type LogWorker() =
 
         let writer = new StreamWriter(stream, leaveOpen = false, AutoFlush = true)
         writer
+        
+    let tryToInt (str:string) =        
+        let (success, value) = Int32.TryParse(str)
+        if success then
+            Some value
+        else
+            None
 
     let deleteOldFiles config =
         getArchiveFiles config
-        |> Seq.map (fun x -> (x, File.GetLastWriteTimeUtc x))
+        |> Seq.map (fun filePath ->
+            let fileName = Path.GetFileNameWithoutExtension filePath
+            let fileNamePrefix = Path.GetFileNameWithoutExtension config.FileName
+            let numberStr = fileName.Substring(fileNamePrefix.Length + 1 ) // We add a . before the number
+            tryToInt numberStr
+            |> Option.map (fun counter -> (filePath, counter)))
+        |> Seq.choose id
         |> Seq.sortByDescending snd
         |> Seq.map fst
         |> Seq.mapi (fun i file -> (i, file))
