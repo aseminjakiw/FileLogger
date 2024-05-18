@@ -115,6 +115,6 @@ builder.Logging.AddFile(fun config ->
 ## TODOs
 
 - customize format of logged messages (date, thread, level, etc.)
-- try out in serious applications
+- ~~try out in serious applications~~ (confirmed)
 - add support for different filters for each log file
 - ~~Test with Linux~~ (confirmed)
