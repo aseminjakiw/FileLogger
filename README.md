@@ -41,6 +41,7 @@ Tip: If you do not add any configuration, a default one will be used:
 - Log file: `/logs/<appname>.app.log` and `appname` is the `IHostEnvironment.ApplicationName`
 - max file size: 10 MiB
 - max files: 10
+- Default log level: Trace (Remember, the global log filters apply before this one)
 
 ## Configuration
 
@@ -59,12 +60,20 @@ Tip: If you do not add any configuration, a default one will be used:
         "default": {
           "File": "logs/logs.log",
           "MaxSize": 104857600,
-          "MaxFiles": 100
+          "MaxFiles": 100,
+          "LogLevel": {
+            "Default": "None",
+            "MyClass.Logger": "Debug"
+          }
         },
         "other": {
           "File": "%ProgramData%/My app/otherLogFile.log",
           "MaxSize": 10485760,
-          "MaxFiles": 10
+          "MaxFiles": 10,
+          "LogLevel": {
+            "MyOtherClass": "Trace",
+            "Microsoft": "Debug"
+          }
         }
       }
     }
@@ -75,11 +84,12 @@ Tip: If you do not add any configuration, a default one will be used:
 In `Logging.File.Files` you can add as many files loggers as you want. The names (`default`, `other`) are only used
 by .NET configuration. So you can make proper overrides with debug or production settings.
 
-| Property   | Default             | Description                                                                                                           |
-|------------|---------------------|-----------------------------------------------------------------------------------------------------------------------|
-| `File`     | `logs/logs.log`     | Name of the log file. Supports relative paths, absolut paths and environment parameters expansion (e.g. `%appdata%`). |
-| `MaxSize`  | `10485760` (10 MiB) | Max size of log file in bytes. If file exceeds this size a roll over will happen.                                     |
-| `MaxFiles` | `10`                | Max number of log files. Older files get deleted first.                                                               |
+| Property   | Default             | Description                                                                                                                                                         |
+|------------|---------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `File`     | `logs/logs.log`     | Name of the log file. Supports relative paths, absolut paths and environment parameters expansion (e.g. `%appdata%`).                                               |
+| `MaxSize`  | `10485760` (10 MiB) | Max size of log file in bytes. If file exceeds this size a roll over will happen.                                                                                   |
+| `MaxFiles` | `10`                | Max number of log files. Older files get deleted first.                                                                                                             |
+| `LogLevel` | `Trace`             | Works the same way as Microsoft global LogLevel. Warning: this one applies *AFTER* global one. So you cannot set the level for a message lower than the global one. |
 
 ### C# code
 
@@ -114,7 +124,7 @@ builder.Logging.AddFile(fun config ->
 
 ## TODOs
 
-- customize format of logged messages (date, thread, level, etc.)
 - ~~try out in serious applications~~ (confirmed)
-- add support for different filters for each log file
+- ~~add support for different filters for each log file~~
 - ~~Test with Linux~~ (confirmed)
+- customize format of logged messages (date, thread, level, etc.) (does someone actually uses that?)
