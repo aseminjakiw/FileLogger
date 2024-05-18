@@ -23,10 +23,11 @@ let main args =
     task {
         let builder = Host.CreateApplicationBuilder(args)
 
-        builder.Logging.AddFile(fun config ->
-            config.Files <-
-                dict[("default", LoggerConfig(File = "mylog.log", MaxSize = 10 * 1024 * 1024, MaxFiles = 17))])
-        |> ignore
+        builder.Logging.AddFile() |> ignore
+        // builder.Logging.AddFile(fun config ->
+        //     config.Files <-
+        //         dict[("default", LoggerConfig(File = "mylog.log", MaxSize = 10 * 1024 * 1024, MaxFiles = 17))])
+        // |> ignore
 
         let _ = builder.Logging.ClearProviders().AddFile()
         use host = builder.Build()
