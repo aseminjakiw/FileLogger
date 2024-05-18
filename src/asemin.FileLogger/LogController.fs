@@ -13,7 +13,16 @@ type LogControllerMessage =
     | UpdateConfig of LoggerConfiguration list
     | Stop of AsyncReplyChannel<unit>
 
+
+
+
 type LogController() =
+    let getLogLevel config (logEntry: LogEntry) =
+        config.LogLevel
+        |> Array.tryFind (fun x -> logEntry.Category.StartsWith x.Category)
+        |> Option.map (_.Level)
+        |> Option.defaultValue config.DefaultLogLevel
+
     let handle state message =
         match message with
         | UpdateConfig configs ->
@@ -32,7 +41,10 @@ type LogController() =
             let log = LogEntry.toString logEntry
 
             for worker in state.Workers do
-                worker.Worker.WriteLog log //TODO: respect log level, and filters
+                let logLevel = getLogLevel worker.Config logEntry
+
+                if logLevel <= logEntry.Level then
+                    worker.Worker.WriteLog log //TODO: respect log level, and filters
 
             Some state
         | Stop reply ->

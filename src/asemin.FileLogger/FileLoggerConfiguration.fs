@@ -2,25 +2,34 @@
 
 open System
 open System.Collections.Generic
+open System.Collections.Immutable
 open System.IO
+open Microsoft.Extensions.Logging
 
 type LoggerConfig() =
     member val File = String.Empty with get, set
     member val MaxSize = Nullable() with get, set
     member val MaxFiles = Nullable() with get, set
+    member val LogLevel: IDictionary<string, LogLevel> = Dictionary() with get, set
+
 
 type FileLoggerConfig() =
-    member val Files: IDictionary<string, LoggerConfig> = Dictionary<_, _>([]) with get, set
+    member val Files: IDictionary<string, LoggerConfig> = Dictionary() with get, set
 
+type LogFilter = { Category: string; Level: LogLevel }
 
 type LoggerConfiguration =
     { FileName: string
       MaxSize: int
-      MaxFiles: int }
+      MaxFiles: int
+      LogLevel: LogFilter[]
+      DefaultLogLevel: LogLevel }
 
 module LoggerConfiguration =
     let defaultLogSize = 10 * 1024 * 1024
     let defaultLogFiles = 10
+    let defaultLogLevels = [||]
+    let defaultLogLevel = LogLevel.Trace
 
     let defaultLogFileName appName =
         let appName =
@@ -33,16 +42,17 @@ module LoggerConfiguration =
 
     let getValues (dict: IDictionary<_, _>) = dict |> Seq.map (_.Value)
 
-    let resolvePath baseDir (path:string) =        
+    let resolvePath baseDir (path: string) =
         let path = path |> Option.ofObj |> Option.defaultValue String.Empty
         let path = path.Replace('\\', '/')
-        let path = 
+
+        let path =
             if Path.DirectorySeparatorChar = '\\' then
-                path.Replace('/','\\')
+                path.Replace('/', '\\')
             else
                 path
-            
-        
+
+
         let path = Environment.ExpandEnvironmentVariables path
 
         if Path.IsPathRooted path then
@@ -53,7 +63,9 @@ module LoggerConfiguration =
     let defaultLogConfig baseDir appName =
         [ { FileName = resolvePath baseDir (defaultLogFileName appName)
             MaxSize = defaultLogSize
-            MaxFiles = defaultLogFiles } ]
+            MaxFiles = defaultLogFiles
+            LogLevel = defaultLogLevels
+            DefaultLogLevel = defaultLogLevel } ]
 
     let mapDto baseDir appName (dto: FileLoggerConfig) =
         let configs =
@@ -64,7 +76,18 @@ module LoggerConfiguration =
             |> Seq.map (fun dto ->
                 { FileName = resolvePath baseDir dto.File
                   MaxSize = dto.MaxSize |> Option.ofNullable |> Option.defaultValue defaultLogSize
-                  MaxFiles = dto.MaxFiles |> Option.ofNullable |> Option.defaultValue defaultLogFiles })
+                  MaxFiles = dto.MaxFiles |> Option.ofNullable |> Option.defaultValue defaultLogFiles
+                  LogLevel =
+                    dto.LogLevel
+                    |> Seq.filter (fun x -> not (x.Key.Equals("Default", StringComparison.OrdinalIgnoreCase)))
+                    |> Seq.sortByDescending (_.Key)
+                    |> Seq.map (fun x -> { Category = x.Key; Level = x.Value })
+                    |> Seq.toArray
+                  DefaultLogLevel =
+                    dto.LogLevel
+                    |> Seq.tryFind (_.Key.Equals("Default", StringComparison.OrdinalIgnoreCase))
+                    |> Option.map _.Value
+                    |> Option.defaultValue defaultLogLevel })
             |> Seq.toList
 
         if configs.Length = 0 then
