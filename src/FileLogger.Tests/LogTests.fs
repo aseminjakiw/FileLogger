@@ -257,5 +257,5 @@ let ``Scope multiple levels`` () : unit =
     |> getLogs
     |> shouldBeEqual
         [ "2022-05-06 21:43:23.456 [00] [INFO ] [FileLogger.Tests.FileLoggerUtil.TestClass] => scope => level 1"
-          "2022-05-06 21:43:23.456 [00] [INFO ] [FileLogger.Tests.FileLoggerUtil.TestClass] => scope =>  [level, 2] => level 2"
+          "2022-05-06 21:43:23.456 [00] [INFO ] [FileLogger.Tests.FileLoggerUtil.TestClass] => scope => [level, 2] => level 2"
           "2022-05-06 21:43:23.456 [00] [INFO ] [FileLogger.Tests.FileLoggerUtil.TestClass] outside" ]

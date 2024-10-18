@@ -9,7 +9,8 @@ type LogEntry =
       Level: LogLevel
       Category: string
       Message: string
-      Exception: exn option }
+      Exception: exn option
+      Scope: string }
 
 module LogEntry =
     let levelToString logLevel =

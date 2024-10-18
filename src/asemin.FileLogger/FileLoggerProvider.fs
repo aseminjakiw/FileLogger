@@ -5,9 +5,7 @@ open System.Runtime.Versioning
 open Microsoft.Extensions.Hosting
 open Microsoft.Extensions.Logging
 open Microsoft.Extensions.Options
-
-
-
+open asemin.FileLogger.ScopeProvider
 
 [<UnsupportedOSPlatform("browser")>]
 [<ProviderAlias("File")>]
@@ -27,13 +25,24 @@ type FileLoggerProvider
 
     let mutable isDisposed = false
 
+    let mutable currentScopeProvider: IExternalScopeProvider =
+        NullExternalScopeProvider.Instance
+
     interface ILoggerProvider with
         member this.CreateLogger(categoryName) =
             RaiseIf.objectDisposed isDisposed this
-            loggers.GetOrAdd(categoryName, (fun name -> FileLogger(categoryName, timeProvider, controller.WriteLog)))
+
+            loggers.GetOrAdd(
+                categoryName,
+                (fun name ->
+                    FileLogger(categoryName, timeProvider, controller.WriteLog, (fun () -> currentScopeProvider)))
+            )
 
         member this.Dispose() =
             isDisposed <- true
             loggers.Clear()
             changeSubscription.Dispose()
             controller.Dispose()
+
+    interface ISupportExternalScope with
+        member this.SetScopeProvider scopeProvider = currentScopeProvider <- scopeProvider
