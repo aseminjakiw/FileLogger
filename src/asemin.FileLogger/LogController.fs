@@ -44,7 +44,7 @@ type LogController() =
                 let logLevel = getLogLevel worker.Config logEntry
 
                 if logLevel <= logEntry.Level then
-                    worker.Worker.WriteLog log
+                    worker.Worker.WriteLog (log worker.Config.IncludeScope)
 
             Some state
         | Stop reply ->

@@ -23,10 +23,10 @@ module LogEntry =
         | LogLevel.Critical -> "FATAL"
         | _ -> "N/A  "
 
-    let toString log =
+    let toString log logScope =
         let exceptionStr =
             match log.Exception with
             | None -> String.Empty
             | Some exn -> Environment.NewLine + exn.ToString()
 
-        $"{log.Time:``yyyy-MM-dd HH:mm:ss.fff``} [{log.ThreadId:``00``}] [{log.Level |> levelToString}] [{log.Category}] {log.Message}{exceptionStr}"
+        $"{log.Time:``yyyy-MM-dd HH:mm:ss.fff``} [{log.ThreadId:``00``}] [{log.Level |> levelToString}] [{log.Category}]{(if logScope then log.Scope else String.Empty)} {log.Message}{exceptionStr}"

@@ -24,6 +24,26 @@ let config =
     }
     """
 
+let configWithScope =
+    """
+    {
+      "Logging": {
+        "File": {
+          "Files": {
+            "default": {
+              "File": "logFile.log",
+              "IncludeScopes": true
+            }
+          },
+          "FormatterOptions": {
+            "IncludeScopes": true
+          }
+        }
+      }
+    }
+    """
+
+
 let normalizeThreadId (lines: string array) =
     lines |> Array.map (fun line -> Regex.Replace(line, @"\[..\]", "[00]"))
 
@@ -218,7 +238,7 @@ let ``Scope disabled`` () : unit =
 
 [<Fact>]
 let ``Scope enabled`` () : unit =
-    use test = config |> setup
+    use test = configWithScope |> setup
     test.SetTime "2022-05-06 21:43:23.456"
 
     let scope = test.Logger.BeginScope("scope")
@@ -231,19 +251,19 @@ let ``Scope enabled`` () : unit =
     combinePath2 test.Directory "logFile.log"
     |> getLogs
     |> shouldBeEqual
-        [ "2022-05-06 21:43:23.456 [00] [INFO ] [FileLogger.Tests.FileLoggerUtil.TestClass] => scope => inside"
+        [ "2022-05-06 21:43:23.456 [00] [INFO ] [FileLogger.Tests.FileLoggerUtil.TestClass] => scope | inside"
           "2022-05-06 21:43:23.456 [00] [INFO ] [FileLogger.Tests.FileLoggerUtil.TestClass] outside" ]
 
 [<Fact>]
 let ``Scope multiple levels`` () : unit =
-    use test = config |> setup
+    use test = configWithScope |> setup
     test.SetTime "2022-05-06 21:43:23.456"
 
     let scope = test.Logger.BeginScope("scope")
     test.Logger.LogInformation "level 1"
 
     let scope2 =
-        test.Logger.BeginScope(KeyValuePair<string, int>("level", 2) |> Seq.singleton)
+        test.Logger.BeginScope(KeyValuePair<string, int>("level", 2))
 
     test.Logger.LogInformation "level 2"
     scope2.Dispose()
@@ -256,6 +276,6 @@ let ``Scope multiple levels`` () : unit =
     combinePath2 test.Directory "logFile.log"
     |> getLogs
     |> shouldBeEqual
-        [ "2022-05-06 21:43:23.456 [00] [INFO ] [FileLogger.Tests.FileLoggerUtil.TestClass] => scope => level 1"
-          "2022-05-06 21:43:23.456 [00] [INFO ] [FileLogger.Tests.FileLoggerUtil.TestClass] => scope => [level, 2] => level 2"
+        [ "2022-05-06 21:43:23.456 [00] [INFO ] [FileLogger.Tests.FileLoggerUtil.TestClass] => scope | level 1"
+          "2022-05-06 21:43:23.456 [00] [INFO ] [FileLogger.Tests.FileLoggerUtil.TestClass] => scope => [level, 2] | level 2"
           "2022-05-06 21:43:23.456 [00] [INFO ] [FileLogger.Tests.FileLoggerUtil.TestClass] outside" ]

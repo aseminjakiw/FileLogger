@@ -2,9 +2,11 @@
 
 open System
 open System.Collections.Generic
-open System.Collections.Immutable
 open System.IO
 open Microsoft.Extensions.Logging
+
+type FileFormatterOptions() =
+    member val IncludeScopes = false with get, set
 
 type LoggerConfig() =
     member val File = String.Empty with get, set
@@ -15,6 +17,8 @@ type LoggerConfig() =
 
 type FileLoggerConfig() =
     member val Files: IDictionary<string, LoggerConfig> = Dictionary() with get, set
+    member val FormatterOptions = new FileFormatterOptions() with get, set
+
 
 type LogFilter = { Category: string; Level: LogLevel }
 
@@ -23,13 +27,15 @@ type LoggerConfiguration =
       MaxSize: int
       MaxFiles: int
       LogLevel: LogFilter[]
-      DefaultLogLevel: LogLevel }
+      DefaultLogLevel: LogLevel
+      IncludeScope: bool }
 
 module LoggerConfiguration =
     let defaultLogSize = 10 * 1024 * 1024
     let defaultLogFiles = 10
     let defaultLogLevels = [||]
     let defaultLogLevel = LogLevel.Trace
+    let defaultIncludeScope = false
 
     let defaultLogFileName appName =
         let appName =
@@ -65,11 +71,12 @@ module LoggerConfiguration =
             MaxSize = defaultLogSize
             MaxFiles = defaultLogFiles
             LogLevel = defaultLogLevels
-            DefaultLogLevel = defaultLogLevel } ]
+            DefaultLogLevel = defaultLogLevel
+            IncludeScope = defaultIncludeScope } ]
 
-    let mapDto baseDir appName (dto: FileLoggerConfig) =
+    let mapDto baseDir appName (config: FileLoggerConfig) =
         let configs =
-            dto.Files
+            config.Files
             |> Option.ofObj
             |> Option.defaultValue (Dictionary())
             |> getValues
@@ -87,7 +94,8 @@ module LoggerConfiguration =
                     dto.LogLevel
                     |> Seq.tryFind (_.Key.Equals("Default", StringComparison.OrdinalIgnoreCase))
                     |> Option.map _.Value
-                    |> Option.defaultValue defaultLogLevel })
+                    |> Option.defaultValue defaultLogLevel
+                  IncludeScope = config.FormatterOptions.IncludeScopes })
             |> Seq.toList
 
         if configs.Length = 0 then

@@ -22,14 +22,19 @@ type FileLogger
 
         member this.Log(logLevel, eventId, state, except, formatter) =
             
-            let x = fun (scope: obj) (state: StringBuilder) ->
+            let appendScope = fun (scope: obj) (state: StringBuilder) ->
                 state.Append " => " |> ignore
                 scope.ToString() |> state.Append |> ignore
                 ()
+            
             let stringBuilder = StringBuilder()
             (getScopeProvider ())
-                .ForEachScope(x, stringBuilder)
-            
+                .ForEachScope(appendScope, stringBuilder)
+                
+            if stringBuilder.Length > 0 then
+                stringBuilder.Append(" |") |> ignore
+            let scope = stringBuilder.ToString()
+            stringBuilder.Clear() |> ignore
                 
             let logEntry =
                 { Time = timeProvider.GetLocalNow()
@@ -38,6 +43,6 @@ type FileLogger
                   Category = category
                   Message = formatter.Invoke(state, except)
                   Exception = Option.ofObj except
-                  Scope = stringBuilder.ToString() }
+                  Scope = scope }
 
             writeLog logEntry
