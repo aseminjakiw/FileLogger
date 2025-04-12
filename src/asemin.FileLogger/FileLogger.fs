@@ -12,7 +12,7 @@ type SystemTimeProvider() =
 
 type FileLogger(category: string, timeProvider: ITimeProvider, writeLog) =
     interface ILogger with
-        member this.BeginScope(state) = Unchecked.defaultof<IDisposable>
+        member this.BeginScope(state) = null
         member this.IsEnabled(logLevel) = true //TODO: respect logLevel
 
         member this.Log(logLevel, eventId, state, except, formatter) =
